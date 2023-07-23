@@ -1,12 +1,18 @@
 package com.github.mattinfern0.todoaholic.server.users;
 
+import com.github.mattinfern0.todoaholic.server.todos.Task;
+import com.github.mattinfern0.todoaholic.server.todos.TaskList;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
 @Table(
-    name="users",
-    uniqueConstraints = @UniqueConstraint(name = "user__unique_email", columnNames = {"email"})
+    name="user"
 )
 public class User {
     @Id
@@ -14,10 +20,22 @@ public class User {
     private Long id;
 
     @NotNull
+    @Email
+    @NotBlank
+    @Column(name = "email", unique = true)
     private String email;
 
     @NotNull
+    @Column(name = "password")
+    @NotBlank
+    @Size(max = 100)
     private String password;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Task> tasks;
+
+    @OneToMany(mappedBy = "owner")
+    private List<TaskList> taskLists;
 
     public User() {}
 
@@ -43,5 +61,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return this.email;
     }
 }

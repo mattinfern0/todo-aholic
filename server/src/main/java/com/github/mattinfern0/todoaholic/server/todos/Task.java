@@ -1,36 +1,41 @@
 package com.github.mattinfern0.todoaholic.server.todos;
 
-import jakarta.annotation.Nullable;
+import com.github.mattinfern0.todoaholic.server.users.User;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name="tasks")
+@Table(name="task")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String title;
-    private String description;
-    private Boolean completed;
-    private ZonedDateTime dueDateTime;
-
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    @NotNull
+    private User owner;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @JoinColumn(name = "task_list_id")
+    private TaskList taskList;
 
-    public Project getProject() {
-        return project;
-    }
+    @Size(max = 100)
+    @NotNull
+    private String displayName;
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
+    @Size(max = 1000)
+    @NotNull
+    private String description;
+
+    @Column(name = "completed_at")
+    private ZonedDateTime completedAt;
+
+    @Column(name = "due_at")
+    private ZonedDateTime dueAt;
 
     public Task() {}
 
@@ -42,12 +47,28 @@ public class Task {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public TaskList getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(TaskList taskList) {
+        this.taskList = taskList;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getDescription() {
@@ -58,19 +79,19 @@ public class Task {
         this.description = description;
     }
 
-    public Boolean getCompleted() {
-        return completed;
+    public ZonedDateTime getCompletedAt() {
+        return completedAt;
     }
 
-    public void setCompleted(Boolean completed) {
-        this.completed = completed;
+    public void setCompletedAt(ZonedDateTime completedAt) {
+        this.completedAt = completedAt;
     }
 
-    public ZonedDateTime getDueDateTime() {
-        return dueDateTime;
+    public ZonedDateTime getDueAt() {
+        return dueAt;
     }
 
-    public void setDueDateTime(ZonedDateTime dueDateTime) {
-        this.dueDateTime = dueDateTime;
+    public void setDueAt(ZonedDateTime dueAt) {
+        this.dueAt = dueAt;
     }
 }
