@@ -1,6 +1,5 @@
-package com.github.mattinfern0.todoaholic.server.todos;
+package com.github.mattinfern0.todoaholic.server.common.entities;
 
-import com.github.mattinfern0.todoaholic.server.users.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,7 +17,7 @@ public class TaskList {
     @NotNull
     private User owner;
 
-    @Column(name="display_name")
+    @Column(name = "display_name")
     @NotNull
     private String displayName;
 

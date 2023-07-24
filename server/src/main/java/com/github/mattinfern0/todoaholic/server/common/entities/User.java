@@ -1,7 +1,5 @@
-package com.github.mattinfern0.todoaholic.server.users;
+package com.github.mattinfern0.todoaholic.server.common.entities;
 
-import com.github.mattinfern0.todoaholic.server.todos.Task;
-import com.github.mattinfern0.todoaholic.server.todos.TaskList;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(
-    name="user"
+        name = "user"
 )
 public class User {
     @Id
@@ -37,7 +35,8 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<TaskList> taskLists;
 
-    public User() {}
+    public User() {
+    }
 
     public Long getId() {
         return id;

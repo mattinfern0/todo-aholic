@@ -1,6 +1,5 @@
-package com.github.mattinfern0.todoaholic.server.todos;
+package com.github.mattinfern0.todoaholic.server.common.entities;
 
-import com.github.mattinfern0.todoaholic.server.users.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name="task")
+@Table(name = "task")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -37,7 +36,8 @@ public class Task {
     @Column(name = "due_at")
     private ZonedDateTime dueAt;
 
-    public Task() {}
+    public Task() {
+    }
 
     public Long getId() {
         return id;
