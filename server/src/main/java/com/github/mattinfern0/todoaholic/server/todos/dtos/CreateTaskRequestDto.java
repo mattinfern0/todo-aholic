@@ -10,6 +10,7 @@ public class CreateTaskRequestDto {
 
     Long taskListId;
 
+    @NotEmpty
     String description;
 
     ZonedDateTime dueAt;
