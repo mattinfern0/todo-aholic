@@ -20,3 +20,4 @@ networks:
 
 volumes:
   postgres-data:
+    name: "todoaholic-api-postgres-data"
