@@ -1,9 +1,9 @@
 package com.github.mattinfern0.todoaholic.server.todos;
 
 import com.github.mattinfern0.todoaholic.server.common.entities.Task;
-import com.github.mattinfern0.todoaholic.server.common.entities.TaskList;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapper;
+import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

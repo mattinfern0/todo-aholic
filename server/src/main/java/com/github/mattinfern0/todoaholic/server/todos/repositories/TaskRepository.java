@@ -1,4 +1,4 @@
-package com.github.mattinfern0.todoaholic.server.todos;
+package com.github.mattinfern0.todoaholic.server.todos.repositories;
 
 import com.github.mattinfern0.todoaholic.server.common.entities.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
