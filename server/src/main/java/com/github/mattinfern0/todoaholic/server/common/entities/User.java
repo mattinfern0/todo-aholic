@@ -9,12 +9,10 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Table(
-        name = "user"
-)
+@Table(name = "app_user")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
