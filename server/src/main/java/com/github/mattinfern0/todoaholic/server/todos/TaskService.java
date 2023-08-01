@@ -25,4 +25,9 @@ public class TaskService {
         List<TaskDto> result = taskDtoMapper.tasksToTaskDtos(taskEntities);
         return result;
     }
+
+    public List<TaskDto> getAllTasksOwnedByUser(Long userId) {
+        List<Task> taskEntities = taskRepository.findByOwnerId(userId);
+        return taskDtoMapper.tasksToTaskDtos(taskEntities);
+    }
 }
