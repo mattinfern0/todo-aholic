@@ -1,16 +1,13 @@
 package com.github.mattinfern0.todoaholic.server.todos.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Null;
 
 import java.time.ZonedDateTime;
 
-public class CreateTaskRequestDto {
-    @NotEmpty
+public class UpdateTaskRequestDto {
     String displayName;
-
     Long taskListId;
-
-    @NotEmpty
     String description;
 
     ZonedDateTime dueAt;

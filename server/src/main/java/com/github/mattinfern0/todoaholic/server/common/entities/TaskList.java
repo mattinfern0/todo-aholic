@@ -47,4 +47,8 @@ public class TaskList {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
+
+    public Boolean canUserView(User user) {
+        return user.equals(this.owner);
+    }
 }

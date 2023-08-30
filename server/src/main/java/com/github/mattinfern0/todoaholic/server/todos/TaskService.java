@@ -1,9 +1,16 @@
 package com.github.mattinfern0.todoaholic.server.todos;
 
 import com.github.mattinfern0.todoaholic.server.common.entities.Task;
+import com.github.mattinfern0.todoaholic.server.common.entities.TaskList;
+import com.github.mattinfern0.todoaholic.server.common.entities.User;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapper;
+import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,22 +19,73 @@ import java.util.List;
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final TaskListRepository taskListRepository;
     private final TaskDtoMapper taskDtoMapper;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskDtoMapper taskDtoMapper) {
+    public TaskService(TaskRepository taskRepository, TaskListRepository taskListRepository, TaskDtoMapper taskDtoMapper) {
         this.taskRepository = taskRepository;
+        this.taskListRepository = taskListRepository;
         this.taskDtoMapper = taskDtoMapper;
-    }
-
-    public List<TaskDto> getAllTasks() {
-        List<Task> taskEntities = taskRepository.findAll();
-        List<TaskDto> result = taskDtoMapper.tasksToTaskDtos(taskEntities);
-        return result;
     }
 
     public List<TaskDto> getAllTasksOwnedByUser(Long userId) {
         List<Task> taskEntities = taskRepository.findByOwnerId(userId);
         return taskDtoMapper.tasksToTaskDtos(taskEntities);
+    }
+
+    public List<TaskDto> getTasksByTaskListId(Long taskListId) {
+        List<Task> taskEntities = taskRepository.findByTaskListId(taskListId);
+        return taskDtoMapper.tasksToTaskDtos(taskEntities);
+    }
+
+    @Transactional
+    public TaskDto createTask(CreateTaskRequestDto createTaskRequestDto, User creator) {
+        Task newTask = new Task();
+        newTask.setCompletedAt(null);
+
+        Long taskListId = createTaskRequestDto.getTaskListId();
+
+        if (taskListId != null) {
+            TaskList targetTaskList = taskListRepository
+                .findById(taskListId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                    String.format("TaskList with id %s not found", taskListId)
+                ));
+
+            newTask.setTaskList(targetTaskList);
+        }
+
+        newTask.setDisplayName(createTaskRequestDto.getDisplayName());
+        newTask.setDescription(createTaskRequestDto.getDescription());
+        newTask.setDueAt(createTaskRequestDto.getDueAt());
+        newTask.setOwner(creator);
+
+        taskRepository.save(newTask);
+
+        return taskDtoMapper.taskToTaskDto(newTask);
+    }
+
+    @Transactional
+    public TaskDto updateTask(Long taskId, UpdateTaskRequestDto updateTaskRequestDto) {
+        Task targetTask = taskRepository
+            .findById(taskId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+
+        // TODO how to distinguish between taskListId=null meaning no taskList vs. do not update the taskList?
+        // CHeckout json-patch
+
+        targetTask.setDisplayName(updateTaskRequestDto.getDisplayName());
+        targetTask.setDescription(updateTaskRequestDto.getDescription());
+        targetTask.setDueAt(updateTaskRequestDto.getDueAt());
+        targetTask.setCompletedAt(updateTaskRequestDto.getCompletedAt());
+
+        taskRepository.save(targetTask);
+        return taskDtoMapper.taskToTaskDto(targetTask);
+    }
+
+    @Transactional
+    public void deleteTaskWithId(Long taskId) {
+        taskRepository.deleteById(taskId);
     }
 }

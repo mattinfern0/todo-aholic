@@ -20,12 +20,6 @@ public class TaskListController {
 
     @GetMapping("")
     public List<TaskListSummaryDto> getList() {
-        boolean isAdmin = false;
-
-        if (isAdmin) {
-            return this.taskListService.findAll();
-        }
-
         long currentUserId = 1;
         return this.taskListService.getAllOwnedByUser(currentUserId);
     }

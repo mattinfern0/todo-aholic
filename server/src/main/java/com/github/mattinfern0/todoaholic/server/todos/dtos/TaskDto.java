@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
 
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TaskDto {
     @NotNull
     Long id;

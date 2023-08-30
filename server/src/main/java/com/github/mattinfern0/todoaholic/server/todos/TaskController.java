@@ -1,11 +1,12 @@
 package com.github.mattinfern0.todoaholic.server.todos;
 
+import com.github.mattinfern0.todoaholic.server.common.entities.User;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskRequestDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,13 +24,33 @@ public class TaskController {
     public List<TaskDto> listTasks(
         @RequestParam(required = false) Long taskListId
     ) {
-        boolean isAdmin = false;
-
-        if (isAdmin) {
-            return taskService.getAllTasks();
+        if (taskListId != null) {
+            return taskService.getTasksByTaskListId(taskListId);
         }
 
         long currentUserId = 2;
         return taskService.getAllTasksOwnedByUser(currentUserId);
+    }
+    
+    @PostMapping("")
+    public TaskDto createTask(
+        @Valid @RequestBody CreateTaskRequestDto createTaskRequestDto
+    ) {
+        User currentUser = new User();
+        return taskService.createTask(createTaskRequestDto, currentUser);
+    }
+
+    @PatchMapping("/{taskId}")
+    public TaskDto updateTask(
+        @PathVariable Long taskId,
+        @Valid @RequestBody UpdateTaskRequestDto updateTaskRequestDto
+    ) {
+        User currentUser = new User();
+        return taskService.updateTask(taskId, updateTaskRequestDto);
+    }
+
+    @DeleteMapping("/{taskId}")
+    public void deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTaskWithId(taskId);
     }
 }

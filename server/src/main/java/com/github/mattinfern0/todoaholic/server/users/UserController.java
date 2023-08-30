@@ -1,9 +1,10 @@
 package com.github.mattinfern0.todoaholic.server.users;
 
+import com.github.mattinfern0.todoaholic.server.users.dtos.CreateUserRequestDto;
 import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -15,7 +16,14 @@ public class UserController {
         this.usersService = usersService;
     }
 
-    @RequestMapping("/me")
+    @PostMapping("")
+    public UserDto createUser(
+        @Valid @RequestBody CreateUserRequestDto createUserRequestDto
+    ) {
+        return usersService.createUser(createUserRequestDto);
+    }
+
+    @GetMapping("/me")
     public UserDto getCurrentUserInfo() {
         long currentUserId = 1;
         return this.usersService.getById(currentUserId);
