@@ -7,6 +7,7 @@ import com.github.mattinfern0.todoaholic.server.users.mappers.UserDtoMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,11 +16,13 @@ import java.util.Optional;
 public class UsersService {
     private final UserRepository userRepository;
     private final UserDtoMapper userDtoMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsersService(UserRepository userRepository, UserDtoMapper userDtoMapper) {
+    public UsersService(UserRepository userRepository, UserDtoMapper userDtoMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userDtoMapper = userDtoMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDto getById(Long userId) {
@@ -36,7 +39,7 @@ public class UsersService {
     public UserDto createUser(CreateUserRequestDto createUserRequestDto) {
         User newUser = new User();
         newUser.setEmail(createUserRequestDto.getEmail());
-        newUser.setPassword(createUserRequestDto.getPassword());
+        newUser.setPassword(passwordEncoder.encode(createUserRequestDto.getPassword()));
         userRepository.save(newUser);
         return userDtoMapper.userToUserDto(newUser);
     }

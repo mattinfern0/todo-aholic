@@ -20,6 +20,7 @@ public class UserController {
     public UserDto createUser(
         @Valid @RequestBody CreateUserRequestDto createUserRequestDto
     ) {
+
         return usersService.createUser(createUserRequestDto);
     }
 
