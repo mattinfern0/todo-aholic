@@ -1,10 +1,12 @@
 package com.github.mattinfern0.todoaholic.server.todos;
 
+import com.github.mattinfern0.todoaholic.server.common.entities.User;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskListDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskListSummaryDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +21,15 @@ public class TaskListController {
     }
 
     @GetMapping("")
-    public List<TaskListSummaryDto> getList() {
-        long currentUserId = 1;
-        return this.taskListService.getAllOwnedByUser(currentUserId);
+    public List<TaskListSummaryDto> getList(@AuthenticationPrincipal User currentUser) {
+        return this.taskListService.getAllOwnedByUser(currentUser.getId());
+    }
+
+    @PostMapping("")
+    public TaskListSummaryDto createTaskList(
+        @Valid @RequestBody CreateTaskListDto createTaskListDto,
+        @AuthenticationPrincipal User currentUser
+    ) {
+        return taskListService.createTaskList(createTaskListDto, currentUser);
     }
 }

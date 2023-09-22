@@ -22,11 +22,10 @@ public class ApiUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User result = this.userRepository
+        return this.userRepository
             .findByEmail(username)
             .orElseThrow(() -> new UsernameNotFoundException(
                 String.format("User with username %s not found", username))
             );
-        return result;
     }
 }

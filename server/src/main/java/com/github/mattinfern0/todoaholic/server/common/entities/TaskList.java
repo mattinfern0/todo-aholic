@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "task_list")
 public class TaskList {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

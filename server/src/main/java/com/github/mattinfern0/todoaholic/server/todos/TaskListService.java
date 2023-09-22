@@ -1,6 +1,8 @@
 package com.github.mattinfern0.todoaholic.server.todos;
 
 import com.github.mattinfern0.todoaholic.server.common.entities.TaskList;
+import com.github.mattinfern0.todoaholic.server.common.entities.User;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskListDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskListSummaryDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskListSummaryDtoMapper;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
@@ -28,5 +30,13 @@ public class TaskListService {
     public List<TaskListSummaryDto> getAllOwnedByUser(Long userId) {
         List<TaskList> taskListEntities = taskListRepository.findByOwnerId(userId);
         return taskListSummaryDtoMapper.taskListsToTaskSummaryListDtos(taskListEntities);
+    }
+
+    public TaskListSummaryDto createTaskList(CreateTaskListDto createTaskListDto, User creator) {
+        TaskList newTaskList = new TaskList();
+        newTaskList.setDisplayName(createTaskListDto.getDisplayName());
+        newTaskList.setOwner(creator);
+        newTaskList = taskListRepository.save(newTaskList);
+        return taskListSummaryDtoMapper.taskListToTaskSummaryListDto(newTaskList);
     }
 }

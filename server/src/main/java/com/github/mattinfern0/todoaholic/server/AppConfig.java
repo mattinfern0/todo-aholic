@@ -21,8 +21,9 @@ public class AppConfig {
             .csrf().disable()
             .authorizeHttpRequests(authCustomizer ->
                 authCustomizer
-                    .requestMatchers( "/users").permitAll()
+                    .requestMatchers( HttpMethod.POST, "/users").permitAll()
                     .requestMatchers("/error").permitAll()
+                    .anyRequest().authenticated()
             )
             .build();
     }
