@@ -43,4 +43,9 @@ public class UsersService {
         userRepository.save(newUser);
         return userDtoMapper.userToUserDto(newUser);
     }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
+    }
 }

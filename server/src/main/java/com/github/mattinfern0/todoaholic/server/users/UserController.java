@@ -3,6 +3,8 @@ package com.github.mattinfern0.todoaholic.server.users;
 import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.users.dtos.CreateUserRequestDto;
 import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +27,6 @@ public class UserController {
     public UserDto createUser(
         @Valid @RequestBody CreateUserRequestDto createUserRequestDto
     ) {
-
         return usersService.createUser(createUserRequestDto);
     }
 
@@ -33,5 +34,11 @@ public class UserController {
     public UserDto getCurrentUserInfo(@AuthenticationPrincipal User principal) {
         long currentUserId = principal.getId();
         return this.usersService.getById(currentUserId);
+    }
+
+    @DeleteMapping("/me")
+    public void deleteCurrentUser(@AuthenticationPrincipal User principal, HttpServletRequest request) throws ServletException {
+        this.usersService.deleteUser(principal.getId());
+        request.logout();
     }
 }
