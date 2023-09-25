@@ -3,6 +3,11 @@ import { BackendApiConnectionError, BackendApiError, UserDetails, UserDetailsSch
 
 const DEFAULT_FETCH_OPTIONS: RequestInit = {
   method: "GET",
+  mode: "cors",
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
 };
 
 export const login = async (email: string, password: string): Promise<UserDetails> => {
