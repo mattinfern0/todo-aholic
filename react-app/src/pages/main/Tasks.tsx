@@ -1,5 +1,13 @@
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
+import { TopAppBar } from "../../components/TopAppBar.tsx";
 
 export const Tasks = () => {
-  return <Container>Show tasks here</Container>;
+  return (
+    <>
+      <TopAppBar />
+      <Container>
+        <Typography>Show tasks ehre</Typography>
+      </Container>
+    </>
+  );
 };

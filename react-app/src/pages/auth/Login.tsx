@@ -1,6 +1,7 @@
 import { Alert, Button, Card, CardContent, CardHeader, Container, Stack, TextField } from "@mui/material";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { useLoginMutation } from "../../apis/backend/mutations.ts";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormValues {
   email: string;
@@ -27,8 +28,8 @@ const LoginFormLayout = (props: { formContext: UseFormReturn<LoginFormValues> })
 };
 
 export const Login = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loginMutation = useLoginMutation();
+  const navigate = useNavigate();
   const loginFormContext = useForm<LoginFormValues>({
     defaultValues: {
       email: "",
@@ -39,9 +40,16 @@ export const Login = () => {
   const { handleSubmit } = loginFormContext;
 
   const onSubmit = handleSubmit((data) => {
-    loginMutation.mutate({
-      ...data,
-    });
+    loginMutation.mutate(
+      {
+        ...data,
+      },
+      {
+        onSuccess: (data) => {
+          navigate("/");
+        },
+      },
+    );
   });
 
   let errorMessage: string | null = null;

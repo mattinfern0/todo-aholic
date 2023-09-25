@@ -31,12 +31,6 @@ public class AuthController {
         @RequestBody @Valid LoginRequestDto loginRequestDto,
         HttpServletRequest httpServletRequest
     ) throws ServletException {
-        boolean isLoggedIn = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-        if (isLoggedIn) {
-            // TODO figure out cleaner way of returning json error message
-            return new ResponseEntity<>("Already logged in", HttpStatus.BAD_REQUEST);
-        }
-
         httpServletRequest.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(userDtoMapper.userToUserDto(currentUser), HttpStatus.OK);

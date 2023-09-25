@@ -8,6 +8,7 @@ const DEFAULT_FETCH_OPTIONS: RequestInit = {
     Accept: "application/json",
     "Content-Type": "application/json",
   },
+  credentials: "include",
 };
 
 export const login = async (email: string, password: string): Promise<UserDetails> => {

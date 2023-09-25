@@ -18,7 +18,7 @@ export const useLoginMutation = () => {
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(async () => await backendAPI.logout(), {
+  return useMutation(async (_args: unknown) => await backendAPI.logout(), {
     onSuccess: () => {
       queryClient.removeQueries(queryKeys.currentUser());
     },
