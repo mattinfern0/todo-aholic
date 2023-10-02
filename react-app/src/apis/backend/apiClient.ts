@@ -1,5 +1,13 @@
 import { backendApiConfig } from "../../configs.ts";
-import { BackendApiConnectionError, BackendApiError, UserDetails, UserDetailsSchema } from "./types.ts";
+import {
+  BackendApiConnectionError,
+  BackendApiError,
+  Task,
+  TaskSchema,
+  UserDetails,
+  UserDetailsSchema,
+} from "./types.ts";
+import { z } from "zod";
 
 const DEFAULT_FETCH_OPTIONS: RequestInit = {
   method: "GET",
@@ -41,6 +49,17 @@ export const getCurrentUserDetails = async (): Promise<UserDetails> => {
   }
 
   return UserDetailsSchema.parse(await res.json());
+};
+
+export const getUserTasks = async (): Promise<Task[]> => {
+  const res = await apiFetch("/tasks");
+
+  if (!res.ok) {
+    throw new BackendApiError();
+  }
+
+  const schema = z.array(TaskSchema);
+  return schema.parse(await res.json());
 };
 
 const apiFetch = async (url: string, fetchOptions?: RequestInit) => {
