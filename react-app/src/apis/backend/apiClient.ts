@@ -3,6 +3,8 @@ import {
   BackendApiConnectionError,
   BackendApiError,
   Task,
+  TaskListSummary,
+  TaskListSummarySchema,
   TaskSchema,
   UserDetails,
   UserDetailsSchema,
@@ -59,6 +61,17 @@ export const getUserTasks = async (): Promise<Task[]> => {
   }
 
   const schema = z.array(TaskSchema);
+  return schema.parse(await res.json());
+};
+
+export const getUserTaskLists = async (): Promise<TaskListSummary[]> => {
+  const res = await apiFetch("/task-lists");
+
+  if (!res.ok) {
+    throw new BackendApiError();
+  }
+
+  const schema = z.array(TaskListSummarySchema);
   return schema.parse(await res.json());
 };
 

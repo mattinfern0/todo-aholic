@@ -15,3 +15,13 @@ export const useUserTasksQuery = () => {
     enabled: userId != null,
   });
 };
+
+export const useUserTaskListsQuery = () => {
+  const userQuery = useCurrentUserDetailsQuery();
+
+  const userId = userQuery.data?.id ?? null;
+
+  return useQuery(queryKeys.userTaskLists(userId), async () => await backendAPI.getUserTaskLists(), {
+    enabled: userId != null,
+  });
+};

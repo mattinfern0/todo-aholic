@@ -19,6 +19,14 @@ export const TaskSchema = z.object({
 
 export type Task = z.infer<typeof TaskSchema>;
 
+export const TaskListSummarySchema = z.object({
+  id: z.number(),
+  ownerId: z.number(),
+  displayName: z.string(),
+});
+
+export type TaskListSummary = z.infer<typeof TaskListSummarySchema>;
+
 export class BackendApiConnectionError extends Error {}
 
 export class BackendApiError extends Error {}

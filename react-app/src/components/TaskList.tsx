@@ -1,5 +1,6 @@
+import React from "react";
 import { useUserTasksQuery } from "../apis/backend/queries.ts";
-import { Divider, List, ListItem, ListItemText } from "@mui/material";
+import { Divider, List, ListItemButton, ListItemText } from "@mui/material";
 
 export const TaskList = () => {
   const userTasksQuery = useUserTasksQuery();
@@ -11,12 +12,12 @@ export const TaskList = () => {
       const secondaryText = task.dueAt ? `Due ${task.dueAt}` : null;
 
       return (
-        <>
+        <React.Fragment key={task.id}>
           {showDivider && <Divider />}
-          <ListItem key={task.id}>
+          <ListItemButton>
             <ListItemText primary={task.displayName} secondary={secondaryText} />
-          </ListItem>
-        </>
+          </ListItemButton>
+        </React.Fragment>
       );
     }) ?? [];
 
