@@ -37,6 +37,22 @@ export const login = async (email: string, password: string): Promise<UserDetail
   return UserDetailsSchema.parse(await res.json());
 };
 
+export const signUp = async (email: string, password: string): Promise<UserDetails> => {
+  const res = await apiFetch("/users", {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new BackendApiError();
+  }
+
+  return UserDetailsSchema.parse(await res.json());
+};
+
 export const logout = async (): Promise<void> => {
   await apiFetch("/auth/logout", {
     method: "POST",

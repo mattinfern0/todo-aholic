@@ -15,6 +15,12 @@ export const useLoginMutation = () => {
   );
 };
 
+export const useSignUpMutation = () => {
+  return useMutation(
+    async (args: { email: string; password: string }) => await backendAPI.signUp(args.email, args.password),
+  );
+};
+
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient();
 
