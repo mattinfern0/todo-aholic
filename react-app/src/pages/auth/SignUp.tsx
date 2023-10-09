@@ -4,6 +4,7 @@ import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
 
 interface SignUpFormValues {
   email: string;
@@ -74,6 +75,7 @@ const SignUpFormLayout = (props: { formContext: UseFormReturn<SignUpFormValues> 
 
 export const SignUp = () => {
   const signUpMutation = useSignUpMutation();
+  const navigate = useNavigate();
 
   const signUpFormContext = useForm<SignUpFormValues>({
     defaultValues: {
@@ -88,6 +90,20 @@ export const SignUp = () => {
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
+    signUpMutation.mutate(
+      {
+        email: data.email,
+        password: data.password_1,
+      },
+      {
+        onSuccess: () => {
+          navigate("/login");
+        },
+        onError: (error: unknown) => {
+          console.error(error);
+        },
+      },
+    );
   });
 
   let errorMessage: string | null = null;
@@ -111,7 +127,7 @@ export const SignUp = () => {
             <form onSubmit={onSubmit}>
               <Stack spacing={3}>
                 <SignUpFormLayout formContext={signUpFormContext} />
-                <Button type="submit" variant="contained" fullWidth>
+                <Button type="submit" variant="contained" fullWidth disabled={signUpMutation.isLoading}>
                   Sign Up
                 </Button>
               </Stack>
