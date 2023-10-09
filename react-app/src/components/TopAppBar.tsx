@@ -19,12 +19,12 @@ export const TopAppBar = () => {
 
   return (
     <>
-      <AppBar>
+      <AppBar sx={{ zIndex: 1300 }}>
         <Toolbar>
           <Typography color="inherit" component="div" sx={{ flexGrow: 1 }}>
             Todo-aholic
           </Typography>
-          <Button color="inherit" onClick={onLogoutClick}>
+          <Button color="inherit" onClick={onLogoutClick} variant="text">
             Logout
           </Button>
         </Toolbar>

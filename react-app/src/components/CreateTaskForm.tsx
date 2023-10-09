@@ -2,6 +2,7 @@ import { Button, Grid, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { Add } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
+import { useCreateTaskMutation } from "../apis/backend/mutations.ts";
 
 interface CreateTaskFormValues {
   display_name: string;
@@ -9,7 +10,8 @@ interface CreateTaskFormValues {
 }
 
 export const CreateTaskForm = () => {
-  const { control, handleSubmit } = useForm<CreateTaskFormValues>({
+  const createTaskMutation = useCreateTaskMutation();
+  const { control, handleSubmit, reset } = useForm<CreateTaskFormValues>({
     defaultValues: {
       display_name: "",
       dueDate: "",
@@ -18,6 +20,23 @@ export const CreateTaskForm = () => {
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
+    createTaskMutation.mutate(
+      {
+        displayName: data.display_name,
+      },
+      {
+        onSuccess: () => {
+          reset();
+        },
+        onError: (error: unknown) => {
+          console.error(error);
+
+          if (error instanceof Error) {
+            console.log(error.message);
+          }
+        },
+      },
+    );
   });
 
   return (
@@ -27,16 +46,14 @@ export const CreateTaskForm = () => {
           <Controller
             control={control}
             name="display_name"
-            render={({ field }) => (
-              <TextField {...field} fullWidth placeholder="What do you want to do?" size="small" required />
-            )}
+            render={({ field }) => <TextField {...field} fullWidth placeholder="What do you want to do?" required />}
           />
         </Grid>
         <Grid item>
-          <DatePicker label="Due Date" slotProps={{ textField: { size: "small" } }} />
+          <DatePicker label="Due Date" />
         </Grid>
         <Grid item md={2}>
-          <Button startIcon={<Add />} variant="contained" type="submit">
+          <Button startIcon={<Add />} variant="contained" type="submit" disabled={createTaskMutation.isLoading}>
             Add
           </Button>
         </Grid>

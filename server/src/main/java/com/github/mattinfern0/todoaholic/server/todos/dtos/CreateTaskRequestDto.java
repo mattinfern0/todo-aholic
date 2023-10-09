@@ -1,6 +1,7 @@
 package com.github.mattinfern0.todoaholic.server.todos.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
 
@@ -10,11 +11,15 @@ public class CreateTaskRequestDto {
 
     Long taskListId;
 
-    @NotEmpty
+    @NotNull
     String description;
 
     ZonedDateTime dueAt;
     ZonedDateTime completedAt;
+
+    public CreateTaskRequestDto() {
+        this.description = "";
+    }
 
     public String getDisplayName() {
         return displayName;

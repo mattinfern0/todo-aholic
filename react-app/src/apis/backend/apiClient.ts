@@ -2,6 +2,7 @@ import { backendApiConfig } from "../../configs.ts";
 import {
   BackendApiConnectionError,
   BackendApiError,
+  CreateTaskArgs,
   Task,
   TaskListSummary,
   TaskListSummarySchema,
@@ -89,6 +90,19 @@ export const getUserTaskLists = async (): Promise<TaskListSummary[]> => {
 
   const schema = z.array(TaskListSummarySchema);
   return schema.parse(await res.json());
+};
+
+export const createTask = async (createTaskArgs: CreateTaskArgs): Promise<Task> => {
+  const res = await apiFetch("/tasks", {
+    method: "POST",
+    body: JSON.stringify(createTaskArgs),
+  });
+
+  if (!res.ok) {
+    throw new BackendApiError();
+  }
+
+  return TaskSchema.parse(await res.json());
 };
 
 const apiFetch = async (url: string, fetchOptions?: RequestInit) => {

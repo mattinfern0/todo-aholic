@@ -3,6 +3,7 @@ import { useSignUpMutation } from "../../apis/backend/mutations.ts";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Helmet } from "react-helmet-async";
 
 interface SignUpFormValues {
   email: string;
@@ -101,6 +102,7 @@ export const SignUp = () => {
 
   return (
     <Container maxWidth="md">
+      <Helmet title="Sign Up" />
       <Card>
         <CardHeader>Login</CardHeader>
         <CardContent>

@@ -30,3 +30,8 @@ export type TaskListSummary = z.infer<typeof TaskListSummarySchema>;
 export class BackendApiConnectionError extends Error {}
 
 export class BackendApiError extends Error {}
+
+export type CreateTaskArgs = {
+  displayName: string;
+  dueAt?: string;
+};

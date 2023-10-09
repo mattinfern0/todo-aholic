@@ -2,11 +2,19 @@ import { Alert, Button, Card, CardContent, CardHeader, Container, Stack, TextFie
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { useLoginMutation } from "../../apis/backend/mutations.ts";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface LoginFormValues {
   email: string;
   password: string;
 }
+
+const loginFormValidationSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
 
 const LoginFormLayout = (props: { formContext: UseFormReturn<LoginFormValues> }) => {
   const { control } = props.formContext;
@@ -16,12 +24,29 @@ const LoginFormLayout = (props: { formContext: UseFormReturn<LoginFormValues> })
       <Controller
         control={control}
         name="email"
-        render={({ field }) => <TextField {...field} required label="Email" />}
+        render={({ field, fieldState }) => (
+          <TextField
+            {...field}
+            error={Boolean(fieldState.error)}
+            helperText={fieldState.error?.message}
+            required
+            label="Email"
+          />
+        )}
       />
       <Controller
         control={control}
         name="password"
-        render={({ field }) => <TextField {...field} required type="password" label="Password" />}
+        render={({ field, fieldState }) => (
+          <TextField
+            {...field}
+            required
+            error={Boolean(fieldState.error)}
+            helperText={fieldState.error?.message}
+            type="password"
+            label="Password"
+          />
+        )}
       />
     </Stack>
   );
@@ -35,6 +60,7 @@ export const Login = () => {
       email: "",
       password: "",
     },
+    resolver: zodResolver(loginFormValidationSchema),
   });
 
   const { handleSubmit } = loginFormContext;
@@ -45,7 +71,7 @@ export const Login = () => {
         ...data,
       },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           navigate("/");
         },
       },
@@ -64,6 +90,7 @@ export const Login = () => {
 
   return (
     <Container maxWidth="md">
+      <Helmet title="Login" />
       <Card>
         <CardHeader>Login</CardHeader>
         <CardContent>

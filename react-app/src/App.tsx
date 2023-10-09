@@ -3,6 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routes } from "./routes.tsx";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./theme.ts";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter(routes);
@@ -10,9 +13,14 @@ const router = createBrowserRouter(routes);
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <RouterProvider router={router} />
-      </LocalizationProvider>
+      <HelmetProvider>
+        <Helmet titleTemplate="%s - Todoaholic" defaultTitle="Todoaholic" />
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <RouterProvider router={router} />
+          </LocalizationProvider>
+        </ThemeProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

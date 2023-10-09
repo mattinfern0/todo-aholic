@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
+  styled,
   Typography,
 } from "@mui/material";
 import { TopAppBar } from "../../components/TopAppBar.tsx";
@@ -18,6 +19,10 @@ import { Add, MoreVertRounded } from "@mui/icons-material";
 import { useUserTaskListsQuery } from "../../apis/backend/queries.ts";
 
 const sidebarWidth = 400;
+
+const DrawerSpacer = styled("div")(({ theme }) => ({
+  ...theme.mixins.toolbar,
+}));
 
 const TaskListSideBar = () => {
   const userTaskListsQuery = useUserTaskListsQuery();
@@ -32,7 +37,8 @@ const TaskListSideBar = () => {
     }) ?? [];
 
   return (
-    <Drawer variant="persistent" anchor="left" open={true} sx={{ width: sidebarWidth, flexShrink: 0 }}>
+    <Drawer variant="persistent" anchor="left" open={true} sx={{ width: sidebarWidth, flexShrink: 0, zIndex: -1 }}>
+      <DrawerSpacer />
       <List>
         <ListItemButton>
           <ListItemText primary="All Tasks" />

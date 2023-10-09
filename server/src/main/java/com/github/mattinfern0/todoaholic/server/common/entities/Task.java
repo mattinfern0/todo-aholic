@@ -27,7 +27,6 @@ public class Task {
     private String displayName;
 
     @Size(max = 1000)
-    @NotNull
     private String description;
 
     @Column(name = "completed_at")
