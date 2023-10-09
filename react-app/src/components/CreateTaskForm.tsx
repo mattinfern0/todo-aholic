@@ -3,6 +3,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { Add } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
 import { useCreateTaskMutation } from "../apis/backend/mutations.ts";
+import { useSnackbar } from "notistack";
 
 interface CreateTaskFormValues {
   display_name: string;
@@ -11,6 +12,7 @@ interface CreateTaskFormValues {
 
 export const CreateTaskForm = () => {
   const createTaskMutation = useCreateTaskMutation();
+  const { enqueueSnackbar } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<CreateTaskFormValues>({
     defaultValues: {
       display_name: "",
@@ -26,6 +28,7 @@ export const CreateTaskForm = () => {
       },
       {
         onSuccess: () => {
+          enqueueSnackbar("Task created", { variant: "success" });
           reset();
         },
         onError: (error: unknown) => {

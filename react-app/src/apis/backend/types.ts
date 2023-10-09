@@ -11,7 +11,7 @@ export const TaskSchema = z.object({
   id: z.number(),
   ownerId: z.number(),
   taskListId: z.number().nullable(),
-  displayName: z.string().nullable(),
+  displayName: z.string(),
   description: z.string().nullable(),
   completedAt: z.string().nullable(),
   dueAt: z.string().nullable(),
