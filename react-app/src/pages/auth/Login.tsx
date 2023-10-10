@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ApiError } from "../../apis/backend/types.ts";
 
 interface LoginFormValues {
   email: string;
@@ -81,7 +82,9 @@ export const Login = () => {
   let errorMessage: string | null = null;
 
   if (loginMutation.isError) {
-    if (loginMutation.error instanceof Error) {
+    if (loginMutation.error instanceof ApiError && loginMutation.error.status === 401) {
+      errorMessage = "Invalid email/password";
+    } else if (loginMutation.error instanceof Error) {
       errorMessage = loginMutation.error.message;
     } else {
       errorMessage = "Unknown error";

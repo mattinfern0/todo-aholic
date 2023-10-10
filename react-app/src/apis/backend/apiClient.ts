@@ -1,5 +1,6 @@
 import { backendApiConfig } from "../../configs.ts";
 import {
+  ApiError,
   BackendApiConnectionError,
   BackendApiError,
   CreateTaskArgs,
@@ -108,8 +109,9 @@ export const createTask = async (createTaskArgs: CreateTaskArgs): Promise<Task> 
 const apiFetch = async (url: string, fetchOptions?: RequestInit) => {
   const requestUrl = new URL(url, backendApiConfig.baseUrl);
 
+  let response: Response;
   try {
-    return await fetch(requestUrl, {
+    response = await fetch(requestUrl, {
       ...DEFAULT_FETCH_OPTIONS,
       ...fetchOptions,
     });
@@ -122,4 +124,10 @@ const apiFetch = async (url: string, fetchOptions?: RequestInit) => {
 
     throw new BackendApiConnectionError(message);
   }
+
+  if (!response.ok) {
+    throw await ApiError.fromResponse(response);
+  }
+
+  return response;
 };
