@@ -1,7 +1,5 @@
 package com.github.mattinfern0.todoaholic.server.todos.dtos;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,6 +18,8 @@ public class TaskDto {
     String displayName;
 
     String description;
+
+    ZonedDateTime createdAt;
 
     ZonedDateTime completedAt;
     ZonedDateTime dueAt;
@@ -78,5 +78,13 @@ public class TaskDto {
 
     public void setDueAt(ZonedDateTime dueAt) {
         this.dueAt = dueAt;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

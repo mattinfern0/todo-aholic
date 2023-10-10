@@ -29,6 +29,10 @@ public class Task {
     @Size(max = 1000)
     private String description;
 
+    @Column(name = "created_at")
+    @NotNull
+    private ZonedDateTime createdAt;
+
     @Column(name = "completed_at")
     private ZonedDateTime completedAt;
 
@@ -92,5 +96,13 @@ public class Task {
 
     public void setDueAt(ZonedDateTime dueAt) {
         this.dueAt = dueAt;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

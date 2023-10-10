@@ -23,29 +23,30 @@ public class TaskController {
 
     @GetMapping("")
     public List<TaskDto> listTasks(
-        @RequestParam(required = false) Long taskListId,
-        @AuthenticationPrincipal User currentUser
+            @RequestParam(required = false) Long taskListId,
+            @AuthenticationPrincipal User currentUser
     ) {
         if (taskListId != null) {
             return taskService.getTasksByTaskListId(taskListId);
         }
 
         long currentUserId = currentUser.getId();
-        return taskService.getAllTasksOwnedByUser(currentUserId);
+        List<TaskDto> taskDtos = taskService.getAllTasksOwnedByUser(currentUserId);
+        return taskDtos;
     }
-    
+
     @PostMapping("")
     public TaskDto createTask(
-        @Valid @RequestBody CreateTaskRequestDto createTaskRequestDto,
-        @AuthenticationPrincipal User currentUser
+            @Valid @RequestBody CreateTaskRequestDto createTaskRequestDto,
+            @AuthenticationPrincipal User currentUser
     ) {
         return taskService.createTask(createTaskRequestDto, currentUser);
     }
 
     @PatchMapping("/{taskId}")
     public TaskDto updateTask(
-        @PathVariable Long taskId,
-        @Valid @RequestBody UpdateTaskRequestDto updateTaskRequestDto
+            @PathVariable Long taskId,
+            @Valid @RequestBody UpdateTaskRequestDto updateTaskRequestDto
     ) {
         User currentUser = new User();
         return taskService.updateTask(taskId, updateTaskRequestDto);
