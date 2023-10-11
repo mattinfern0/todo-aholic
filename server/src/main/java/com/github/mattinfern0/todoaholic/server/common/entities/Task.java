@@ -27,17 +27,17 @@ public class Task {
     private String displayName;
 
     @Size(max = 1000)
-    private String description;
+    private String description = "";
 
     @Column(name = "created_at")
     @NotNull
     private ZonedDateTime createdAt;
 
     @Column(name = "completed_at")
-    private ZonedDateTime completedAt;
+    private ZonedDateTime completedAt = null;
 
     @Column(name = "due_at")
-    private ZonedDateTime dueAt;
+    private ZonedDateTime dueAt = null;
 
     public Task() {
     }

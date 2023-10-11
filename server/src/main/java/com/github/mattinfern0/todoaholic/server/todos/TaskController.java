@@ -3,6 +3,7 @@ package com.github.mattinfern0.todoaholic.server.todos;
 import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskRequestDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,4 +57,19 @@ public class TaskController {
     public void deleteTask(@PathVariable Long taskId) {
         taskService.deleteTaskWithId(taskId);
     }
+
+    @GetMapping("/{taskId}/status")
+    public TaskStatusDto getTaskStatus(@PathVariable Long taskId) {
+        return taskService.getTaskStatus(taskId);
+    }
+
+    @PutMapping("/{taskId}/status")
+    public TaskStatusDto updateTaskStatus(
+            @PathVariable Long taskId,
+            @Valid @RequestBody TaskStatusDto taskStatusDto
+    ) {
+        return taskService.updateTaskStatus(taskId, taskStatusDto);
+    }
+
+
 }

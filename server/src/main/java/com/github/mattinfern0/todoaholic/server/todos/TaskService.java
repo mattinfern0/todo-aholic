@@ -5,6 +5,7 @@ import com.github.mattinfern0.todoaholic.server.common.entities.TaskList;
 import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapper;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
@@ -14,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -48,10 +50,10 @@ public class TaskService {
 
         if (taskListId != null) {
             TaskList targetTaskList = taskListRepository
-                .findById(taskListId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                    String.format("TaskList with id %s not found", taskListId)
-                ));
+                    .findById(taskListId)
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            String.format("TaskList with id %s not found", taskListId)
+                    ));
 
             newTask.setTaskList(targetTaskList);
         }
@@ -69,8 +71,8 @@ public class TaskService {
     @Transactional
     public TaskDto updateTask(Long taskId, UpdateTaskRequestDto updateTaskRequestDto) {
         Task targetTask = taskRepository
-            .findById(taskId)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+                .findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
 
         // TODO how to distinguish between taskListId=null meaning no taskList vs. do not update the taskList?
         // CHeckout json-patch
@@ -82,6 +84,32 @@ public class TaskService {
 
         taskRepository.save(targetTask);
         return taskDtoMapper.taskToTaskDto(targetTask);
+    }
+
+    public TaskStatusDto getTaskStatus(Long taskId) {
+        Task targetTask = taskRepository
+                .findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+
+        TaskStatusDto result = new TaskStatusDto();
+        result.setIsComplete(targetTask.getCompletedAt() != null);
+        return result;
+    }
+
+    @Transactional
+    public TaskStatusDto updateTaskStatus(Long taskId, TaskStatusDto taskStatusDto) {
+        Task targetTask = taskRepository
+                .findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+
+        if (taskStatusDto.getIsComplete()) {
+            targetTask.setCompletedAt(ZonedDateTime.now());
+        } else {
+            targetTask.setCompletedAt(null);
+        }
+
+        taskRepository.save(targetTask);
+        return taskStatusDto;
     }
 
     @Transactional
