@@ -17,10 +17,11 @@ import { TopAppBar } from "../../components/TopAppBar.tsx";
 import { TaskList } from "../../components/TaskList.tsx";
 import { CreateTaskForm } from "../../components/CreateTaskForm.tsx";
 import { Add, MoreVertRounded } from "@mui/icons-material";
-import { useUserTaskListsQuery } from "../../apis/backend/queries.ts";
+import { useUserTaskListsQuery, useUserTasksQuery } from "../../apis/backend/queries.ts";
 import { SnackbarProvider } from "notistack";
 import { useState } from "react";
 import { CreateTaskListDialog } from "../../components/CreateTaskListDialog.tsx";
+import { Task } from "../../apis/backend/types.ts";
 
 const sidebarWidth = 400;
 
@@ -61,6 +62,13 @@ const TaskListSideBar = (props: { handleNewTaskListClick: () => unknown }) => {
 
 export const Tasks = () => {
   const [showCreateTaskListDialog, setShowCreateTaskListDialog] = useState<boolean>(false);
+  const userTasksQuery = useUserTasksQuery();
+
+  const incompleteTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt == null) ?? [];
+  const completeTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt != null) ?? [];
+
+  const showCompletedTasksSection = completeTasks.length > 0;
+  
   return (
     <SnackbarProvider>
       <TopAppBar />
@@ -80,11 +88,15 @@ export const Tasks = () => {
             </Stack>
 
             <CreateTaskForm />
-            <TaskList />
-            <Divider role="presentation">
-              <Typography variant="h5">Completed</Typography>
-            </Divider>
-            <TaskList />
+            <TaskList tasks={incompleteTasks} />
+            {showCompletedTasksSection && (
+              <>
+                <Divider role="presentation">
+                  <Typography variant="h5">Completed</Typography>
+                </Divider>
+                <TaskList tasks={completeTasks} />
+              </>
+            )}
           </CardContent>
         </Card>
       </Container>

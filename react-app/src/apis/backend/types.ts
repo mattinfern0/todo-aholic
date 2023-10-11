@@ -36,6 +36,11 @@ export type CreateTaskArgs = {
   dueAt?: string;
 };
 
+export type UpdateTaskStatusArgs = {
+  taskId: number;
+  isComplete: boolean;
+};
+
 const ApiValidationErrorDetailItemSchema = z.object({
   code: z.string(),
   message: z.string(),

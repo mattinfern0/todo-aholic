@@ -8,6 +8,7 @@ import {
   TaskListSummary,
   TaskListSummarySchema,
   TaskSchema,
+  UpdateTaskStatusArgs,
   UserDetails,
   UserDetailsSchema,
 } from "./types.ts";
@@ -48,10 +49,6 @@ export const signUp = async (email: string, password: string): Promise<UserDetai
     }),
   });
 
-  if (!res.ok) {
-    throw new BackendApiError();
-  }
-
   return UserDetailsSchema.parse(await res.json());
 };
 
@@ -64,19 +61,11 @@ export const logout = async (): Promise<void> => {
 export const getCurrentUserDetails = async (): Promise<UserDetails> => {
   const res = await apiFetch("/users/me");
 
-  if (!res.ok) {
-    throw new BackendApiError();
-  }
-
   return UserDetailsSchema.parse(await res.json());
 };
 
 export const getUserTasks = async (): Promise<Task[]> => {
   const res = await apiFetch("/tasks");
-
-  if (!res.ok) {
-    throw new BackendApiError();
-  }
 
   const schema = z.array(TaskSchema);
   return schema.parse(await res.json());
@@ -84,10 +73,6 @@ export const getUserTasks = async (): Promise<Task[]> => {
 
 export const getUserTaskLists = async (): Promise<TaskListSummary[]> => {
   const res = await apiFetch("/task-lists");
-
-  if (!res.ok) {
-    throw new BackendApiError();
-  }
 
   const schema = z.array(TaskListSummarySchema);
   return schema.parse(await res.json());
@@ -99,11 +84,16 @@ export const createTask = async (createTaskArgs: CreateTaskArgs): Promise<Task> 
     body: JSON.stringify(createTaskArgs),
   });
 
-  if (!res.ok) {
-    throw new BackendApiError();
-  }
-
   return TaskSchema.parse(await res.json());
+};
+
+export const updateTaskStatus = async (args: UpdateTaskStatusArgs): Promise<void> => {
+  await apiFetch(`/tasks/${args.taskId}/status`, {
+    method: "PUT",
+    body: JSON.stringify({
+      isComplete: args.isComplete,
+    }),
+  });
 };
 
 const apiFetch = async (url: string, fetchOptions?: RequestInit) => {
