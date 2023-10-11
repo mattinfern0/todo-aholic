@@ -22,6 +22,7 @@ import { SnackbarProvider } from "notistack";
 import { useState } from "react";
 import { CreateTaskListDialog } from "../../components/CreateTaskListDialog.tsx";
 import { Task } from "../../apis/backend/types.ts";
+import { TaskDetailDialog } from "../../components/TaskDetailDialog.tsx";
 
 const sidebarWidth = 400;
 
@@ -63,17 +64,27 @@ const TaskListSideBar = (props: { handleNewTaskListClick: () => unknown }) => {
 export const Tasks = () => {
   const [showCreateTaskListDialog, setShowCreateTaskListDialog] = useState<boolean>(false);
   const userTasksQuery = useUserTasksQuery();
+  const [detailDialogTaskId, setDetailDialogTaskId] = useState<number | null>(null);
 
   const incompleteTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt == null) ?? [];
   const completeTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt != null) ?? [];
 
   const showCompletedTasksSection = completeTasks.length > 0;
-  
+
+  const onTaskListItemClick = (task: Task) => {
+    setDetailDialogTaskId(task.id);
+  };
+
   return (
     <SnackbarProvider>
       <TopAppBar />
       <TaskListSideBar handleNewTaskListClick={() => setShowCreateTaskListDialog(true)} />
       <CreateTaskListDialog open={showCreateTaskListDialog} onClose={() => setShowCreateTaskListDialog(false)} />
+      <TaskDetailDialog
+        taskId={detailDialogTaskId}
+        open={detailDialogTaskId != null}
+        onClose={() => setDetailDialogTaskId(null)}
+      />
       <Container sx={{ paddingTop: "1rem" }}>
         <Card>
           <CardContent>
@@ -88,13 +99,13 @@ export const Tasks = () => {
             </Stack>
 
             <CreateTaskForm />
-            <TaskList tasks={incompleteTasks} />
+            <TaskList tasks={incompleteTasks} onTaskListItemClick={onTaskListItemClick} />
             {showCompletedTasksSection && (
               <>
                 <Divider role="presentation">
                   <Typography variant="h5">Completed</Typography>
                 </Divider>
-                <TaskList tasks={completeTasks} />
+                <TaskList tasks={completeTasks} onTaskListItemClick={onTaskListItemClick} />
               </>
             )}
           </CardContent>

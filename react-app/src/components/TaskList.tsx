@@ -6,16 +6,17 @@ import { useSnackbar } from "notistack";
 
 export interface TaskListProps {
   tasks: Task[];
+  onTaskListItemClick: (task: Task) => void;
 }
 
-const TaskListItem = (props: { task: Task }) => {
-  const { task } = props;
+const TaskListItem = (props: { task: Task; onTaskListItemClick: (task: Task) => void }) => {
+  const { task, onTaskListItemClick } = props;
 
   const updateTaskStatusMutation = useUpdateTaskStatusMutation();
   const snackbar = useSnackbar();
-  const secondaryText = task.dueAt ? `Due ${task.dueAt}` : null;
 
   const isTaskComplete = task.completedAt != null;
+  const secondaryText = !isTaskComplete && task.dueAt ? `Due ${task.dueAt}` : null;
 
   const onCheckBoxClick = () => {
     if (updateTaskStatusMutation.isLoading) {
@@ -35,10 +36,19 @@ const TaskListItem = (props: { task: Task }) => {
     );
   };
 
+  const isOverdue = !isTaskComplete && task.dueAt != null && new Date(task.dueAt) < new Date();
+
   return (
-    <ListItemButton>
+    <ListItemButton alignItems="center">
       <Checkbox checked={isTaskComplete} onClick={onCheckBoxClick} />
-      <ListItemText primary={task.displayName} secondary={secondaryText} />
+      <ListItemText
+        onClick={() => onTaskListItemClick(task)}
+        primary={task.displayName}
+        secondary={secondaryText}
+        primaryTypographyProps={{
+          color: isOverdue ? "red" : undefined,
+        }}
+      />
     </ListItemButton>
   );
 };
@@ -53,7 +63,7 @@ export const TaskList = (props: TaskListProps) => {
       return (
         <React.Fragment key={task.id}>
           {showDivider && <Divider />}
-          <TaskListItem task={task} />
+          <TaskListItem task={task} onTaskListItemClick={props.onTaskListItemClick} />
         </React.Fragment>
       );
     }) ?? [];
