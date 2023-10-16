@@ -13,8 +13,8 @@ export const TaskSchema = z.object({
   taskListId: z.number().nullable(),
   displayName: z.string(),
   description: z.string().nullable(),
-  completedAt: z.string().nullable(),
-  dueAt: z.string().nullable(),
+  completedAt: z.coerce.date().nullable(),
+  dueAt: z.coerce.date().nullable(),
 });
 
 export type Task = z.infer<typeof TaskSchema>;

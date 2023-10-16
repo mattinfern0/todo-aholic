@@ -29,7 +29,8 @@ const TaskListItem = (props: { task: Task; onTaskListItemClick: (task: Task) => 
         isComplete: !isTaskComplete,
       },
       {
-        onError: (_err: unknown) => {
+        onError: (err: unknown) => {
+          console.error(err);
           snackbar.enqueueSnackbar("An error occurred.", { variant: "error" });
         },
       },

@@ -65,6 +65,7 @@ export const Tasks = () => {
   const [showCreateTaskListDialog, setShowCreateTaskListDialog] = useState<boolean>(false);
   const userTasksQuery = useUserTasksQuery();
   const [detailDialogTaskId, setDetailDialogTaskId] = useState<number | null>(null);
+  const [showDetailDialog, setShowDetailDialog] = useState<boolean>(false);
 
   const incompleteTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt == null) ?? [];
   const completeTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt != null) ?? [];
@@ -73,6 +74,7 @@ export const Tasks = () => {
 
   const onTaskListItemClick = (task: Task) => {
     setDetailDialogTaskId(task.id);
+    setShowDetailDialog(true);
   };
 
   return (
@@ -82,8 +84,8 @@ export const Tasks = () => {
       <CreateTaskListDialog open={showCreateTaskListDialog} onClose={() => setShowCreateTaskListDialog(false)} />
       <TaskDetailDialog
         taskId={detailDialogTaskId}
-        open={detailDialogTaskId != null}
-        onClose={() => setDetailDialogTaskId(null)}
+        open={showDetailDialog}
+        onClose={() => setShowDetailDialog(false)}
       />
       <Container sx={{ paddingTop: "1rem" }}>
         <Card>

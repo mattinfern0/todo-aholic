@@ -1,12 +1,17 @@
 import { Box, Dialog, DialogContent, Stack, Typography } from "@mui/material";
 import { Task } from "../apis/backend/types.ts";
 import { useUserTasksQuery } from "../apis/backend/queries.ts";
+import { format } from "date-fns";
 
 export interface TaskDetailDialogProps {
   taskId: number | null;
   open: boolean;
   onClose: () => void;
 }
+
+const formatDate = (d: Date): string => {
+  return format(d, "h:mm a MMM d, yyyy");
+};
 
 export const TaskDetailDialog = (props: TaskDetailDialogProps) => {
   const { taskId } = props;
@@ -22,9 +27,6 @@ export const TaskDetailDialog = (props: TaskDetailDialogProps) => {
     return null;
   }
 
-  const showDueText = task.dueAt && task.completedAt == null;
-  const showCompletedAtText = task.completedAt != null;
-
   return (
     <Dialog open={props.open} onClose={props.onClose} maxWidth="md" fullWidth>
       <DialogContent>
@@ -33,9 +35,13 @@ export const TaskDetailDialog = (props: TaskDetailDialogProps) => {
             <Typography variant="h5">{task.displayName}</Typography>
             <Typography variant="body1">{task.description || "No Description"}</Typography>
 
-            {showDueText && <Typography variant="body1">Due At: {task.dueAt}</Typography>}
+            {task.dueAt != null && task.completedAt == null && (
+              <Typography variant="body1">Due At: {formatDate(task.dueAt)}</Typography>
+            )}
 
-            {showCompletedAtText && <Typography variant="body1">Completed At: {task.completedAt}</Typography>}
+            {task.completedAt != null && (
+              <Typography variant="body1">Completed At: {formatDate(task.completedAt)}</Typography>
+            )}
           </Stack>
         </Box>
       </DialogContent>
