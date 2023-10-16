@@ -40,6 +40,7 @@ public class Task {
     private ZonedDateTime dueAt = null;
 
     public Task() {
+        createdAt = ZonedDateTime.now();
     }
 
     public Long getId() {
