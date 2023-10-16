@@ -4,7 +4,7 @@ import { routes } from "./routes.tsx";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./theme.ts";
 
 const queryClient = new QueryClient();
@@ -16,6 +16,7 @@ function App() {
       <HelmetProvider>
         <Helmet titleTemplate="%s - Todoaholic" defaultTitle="Todoaholic" />
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <RouterProvider router={router} />
           </LocalizationProvider>
