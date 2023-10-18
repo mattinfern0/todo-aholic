@@ -1,8 +1,7 @@
 import { backendApiConfig } from "../../configs.ts";
 import {
+  ApiConnectionError,
   ApiError,
-  BackendApiConnectionError,
-  BackendApiError,
   CreateTaskArgs,
   Task,
   TaskListSummary,
@@ -32,10 +31,6 @@ export const login = async (email: string, password: string): Promise<UserDetail
       password,
     }),
   });
-
-  if (!res.ok) {
-    throw new BackendApiError();
-  }
 
   return UserDetailsSchema.parse(await res.json());
 };
@@ -112,7 +107,7 @@ const apiFetch = async (url: string, fetchOptions?: RequestInit) => {
       message = error.message ?? message;
     }
 
-    throw new BackendApiConnectionError(message);
+    throw new ApiConnectionError(message);
   }
 
   if (!response.ok) {

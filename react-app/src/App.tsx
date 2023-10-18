@@ -6,6 +6,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./theme.ts";
+import { AppErrorBoundary } from "./components/AppErrorBoundary.tsx";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter(routes);
@@ -18,7 +19,9 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <RouterProvider router={router} />
+            <AppErrorBoundary>
+              <RouterProvider router={router} />
+            </AppErrorBoundary>
           </LocalizationProvider>
         </ThemeProvider>
       </HelmetProvider>

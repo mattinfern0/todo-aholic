@@ -3,7 +3,11 @@ import * as backendAPI from "./apiClient.ts";
 import { queryKeys } from "./queryKeys.ts";
 
 export const useCurrentUserDetailsQuery = () => {
-  return useQuery(queryKeys.currentUser(), async () => await backendAPI.getCurrentUserDetails(), { retry: false });
+  return useQuery({
+    queryKey: queryKeys.currentUser(),
+    queryFn: async () => await backendAPI.getCurrentUserDetails(),
+    retry: false,
+  });
 };
 
 export const useUserTasksQuery = () => {
@@ -11,7 +15,9 @@ export const useUserTasksQuery = () => {
 
   const userId = userQuery.data?.id ?? null;
 
-  return useQuery(queryKeys.userTasks(userId), async () => await backendAPI.getUserTasks(), {
+  return useQuery({
+    queryKey: queryKeys.userTasks(userId),
+    queryFn: async () => await backendAPI.getUserTasks(),
     enabled: userId != null,
   });
 };
@@ -21,7 +27,9 @@ export const useUserTaskListsQuery = () => {
 
   const userId = userQuery.data?.id ?? null;
 
-  return useQuery(queryKeys.userTaskLists(userId), async () => await backendAPI.getUserTaskLists(), {
+  return useQuery({
+    queryKey: queryKeys.userTaskLists(userId),
+    queryFn: async () => await backendAPI.getUserTaskLists(),
     enabled: userId != null,
   });
 };

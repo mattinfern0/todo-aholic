@@ -27,13 +27,9 @@ export const TaskListSummarySchema = z.object({
 
 export type TaskListSummary = z.infer<typeof TaskListSummarySchema>;
 
-export class BackendApiConnectionError extends Error {}
-
-export class BackendApiError extends Error {}
-
 export type CreateTaskArgs = {
   displayName: string;
-  dueAt?: string;
+  dueAt?: string | Date;
 };
 
 export type UpdateTaskStatusArgs = {
@@ -96,3 +92,5 @@ export class ApiError extends Error {
     return result;
   }
 }
+
+export class ApiConnectionError extends Error {}
