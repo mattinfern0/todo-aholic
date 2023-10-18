@@ -4,6 +4,7 @@ import { Error404 } from "./pages/error/Error404.tsx";
 import { Tasks } from "./pages/main/Tasks.tsx";
 import { LoginRequiredGuard } from "./components/LoginRequiredGuard.tsx";
 import { SignUp } from "./pages/auth/SignUp.tsx";
+import { AppErrorBoundary } from "./components/AppErrorBoundary.tsx";
 
 export const routes: RouteObject[] = [
   {
@@ -17,9 +18,11 @@ export const routes: RouteObject[] = [
   {
     path: "/",
     element: (
-      <LoginRequiredGuard>
-        <Tasks />
-      </LoginRequiredGuard>
+      <AppErrorBoundary>
+        <LoginRequiredGuard>
+          <Tasks />
+        </LoginRequiredGuard>
+      </AppErrorBoundary>
     ),
   },
   {
