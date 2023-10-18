@@ -43,7 +43,18 @@ const TaskListSideBar = (props: { handleNewTaskListClick: () => unknown }) => {
     }) ?? [];
 
   return (
-    <Drawer variant="persistent" anchor="left" open={true} sx={{ width: sidebarWidth, flexShrink: 0, zIndex: -1 }}>
+    <Drawer
+      variant="persistent"
+      anchor="left"
+      open={true}
+      sx={{ width: sidebarWidth, flexShrink: 0, zIndex: -1 }}
+      PaperProps={{
+        sx: {
+          backgroundColor: "#5e5e5e",
+          color: "#fff",
+        },
+      }}
+    >
       <DrawerSpacer />
       <List>
         <ListItemButton>

@@ -36,7 +36,7 @@ export const TopAppBar = () => {
         <MenuItem>Settings</MenuItem>
         <MenuItem onClick={onLogoutClick}>Log Out</MenuItem>
       </Menu>
-      <AppBar sx={{ zIndex: 1300 }}>
+      <AppBar sx={{ zIndex: 1300, backgroundColor: "#333333" }}>
         <Toolbar>
           <Typography color="inherit" component="div" sx={{ flexGrow: 1 }}>
             Todo-aholic
