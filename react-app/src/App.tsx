@@ -7,6 +7,7 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./theme.ts";
 import { AppErrorBoundary } from "./components/AppErrorBoundary.tsx";
+import { AuthContextProvider } from "./integrations/firebase/AuthContext.tsx";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter(routes);
@@ -20,7 +21,9 @@ function App() {
           <CssBaseline />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <AppErrorBoundary>
-              <RouterProvider router={router} />
+              <AuthContextProvider>
+                <RouterProvider router={router} />
+              </AuthContextProvider>
             </AppErrorBoundary>
           </LocalizationProvider>
         </ThemeProvider>

@@ -1,5 +1,5 @@
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
-import { ApiConnectionError } from "../apis/backend/types.ts";
+import { ApiConnectionError } from "../integrations/backendApi/types.ts";
 import { Error503 } from "../pages/error/Error503.tsx";
 import { Typography } from "@mui/material";
 import React from "react";

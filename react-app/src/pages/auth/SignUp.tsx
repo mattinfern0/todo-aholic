@@ -1,10 +1,10 @@
 import { Alert, Button, Card, CardContent, CardHeader, Container, Stack, TextField } from "@mui/material";
-import { useSignUpMutation } from "../../apis/backend/mutations.ts";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
+import { useSignUpMutation } from "../../integrations/firebase/mutations.ts";
 
 interface SignUpFormValues {
   email: string;
@@ -127,7 +127,7 @@ export const SignUp = () => {
             <form onSubmit={onSubmit}>
               <Stack spacing={3}>
                 <SignUpFormLayout formContext={signUpFormContext} />
-                <Button type="submit" variant="contained" fullWidth disabled={signUpMutation.isLoading}>
+                <Button type="submit" variant="contained" fullWidth disabled={signUpMutation.isPending}>
                   Sign Up
                 </Button>
               </Stack>

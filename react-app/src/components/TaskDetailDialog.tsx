@@ -1,6 +1,6 @@
 import { Box, Dialog, DialogContent, Stack, Typography } from "@mui/material";
-import { Task } from "../apis/backend/types.ts";
-import { useUserTasksQuery } from "../apis/backend/queries.ts";
+import { Task } from "../integrations/backendApi/types.ts";
+import { useUserTasksQuery } from "../integrations/backendApi/queries.ts";
 import { format } from "date-fns";
 
 export interface TaskDetailDialogProps {

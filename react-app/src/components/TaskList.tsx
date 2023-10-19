@@ -1,7 +1,7 @@
 import React from "react";
 import { Checkbox, Divider, List, ListItemButton, ListItemText } from "@mui/material";
-import { Task } from "../apis/backend/types.ts";
-import { useUpdateTaskStatusMutation } from "../apis/backend/mutations.ts";
+import { Task } from "../integrations/backendApi/types.ts";
+import { useUpdateTaskStatusMutation } from "../integrations/backendApi/mutations.ts";
 import { useSnackbar } from "notistack";
 
 export interface TaskListProps {

@@ -1,7 +1,7 @@
 import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
-import { useLogoutMutation } from "../apis/backend/mutations.ts";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useLogoutMutation } from "../integrations/firebase/mutations.ts";
 
 export const TopAppBar = () => {
   const navigate = useNavigate();

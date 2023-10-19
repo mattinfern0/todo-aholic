@@ -17,11 +17,11 @@ import { TopAppBar } from "../../components/TopAppBar.tsx";
 import { TaskList } from "../../components/TaskList.tsx";
 import { CreateTaskForm } from "../../components/CreateTaskForm.tsx";
 import { Add, MoreVertRounded } from "@mui/icons-material";
-import { useUserTaskListsQuery, useUserTasksQuery } from "../../apis/backend/queries.ts";
+import { useUserTaskListsQuery, useUserTasksQuery } from "../../integrations/backendApi/queries.ts";
 import { SnackbarProvider } from "notistack";
 import { useState } from "react";
 import { CreateTaskListDialog } from "../../components/CreateTaskListDialog.tsx";
-import { Task } from "../../apis/backend/types.ts";
+import { Task } from "../../integrations/backendApi/types.ts";
 import { TaskDetailDialog } from "../../components/TaskDetailDialog.tsx";
 
 const sidebarWidth = 400;
