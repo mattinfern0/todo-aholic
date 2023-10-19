@@ -12,15 +12,21 @@ import {
   UserDetailsSchema,
 } from "./types.ts";
 import { z } from "zod";
+import { getIdToken } from "../firebase/firebaseApp.ts";
 
-const DEFAULT_FETCH_OPTIONS: RequestInit = {
-  method: "GET",
-  mode: "cors",
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-  credentials: "include",
+const buildDefaultOptions = async (): Promise<RequestInit> => {
+  const bearerToken = await getIdToken();
+
+  return {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    credentials: "include",
+  };
 };
 
 export const login = async (email: string, password: string): Promise<UserDetails> => {
@@ -97,7 +103,7 @@ const apiFetch = async (url: string, fetchOptions?: RequestInit) => {
   let response: Response;
   try {
     response = await fetch(requestUrl, {
-      ...DEFAULT_FETCH_OPTIONS,
+      ...(await buildDefaultOptions()),
       ...fetchOptions,
     });
   } catch (error: unknown) {
