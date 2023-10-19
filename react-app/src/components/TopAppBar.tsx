@@ -2,8 +2,10 @@ import { AppBar, Avatar, IconButton, Menu, MenuItem, Toolbar, Typography } from 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useLogoutMutation } from "../integrations/firebase/mutations.ts";
+import { useAuth } from "../integrations/firebase/AuthContext.tsx";
 
 export const TopAppBar = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const logoutMutation = useLogoutMutation();
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
@@ -41,6 +43,8 @@ export const TopAppBar = () => {
           <Typography color="inherit" component="div" sx={{ flexGrow: 1 }}>
             Todo-aholic
           </Typography>
+
+          {user != null && <Typography variant="body1">{user.email}</Typography>}
 
           <IconButton onClick={onAvatarClick}>
             <Avatar />

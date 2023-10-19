@@ -34,6 +34,7 @@ export const AuthContextProvider = ({ children }: { children?: React.ReactNode }
 
   useEffect(() => {
     return onAuthStateChanged(firebaseAuth, (firebaseUser) => {
+      console.log("authState", firebaseUser);
       setUser(firebaseUser);
       setIsLoading(false);
     });

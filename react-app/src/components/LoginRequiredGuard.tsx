@@ -10,7 +10,7 @@ export const LoginRequiredGuard = (props: { children?: React.ReactNode }) => {
     return null;
   }
 
-  if (!auth.isLoading && auth.user != null) {
+  if (!auth.isLoading && auth.user == null) {
     navigate("/login");
   }
 
