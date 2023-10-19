@@ -1,17 +1,16 @@
 package com.github.mattinfern0.todoaholic.server.users;
 
 import com.github.mattinfern0.todoaholic.server.common.entities.User;
-import com.github.mattinfern0.todoaholic.server.users.dtos.CreateUserRequestDto;
 import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
@@ -23,17 +22,11 @@ public class UserController {
         this.usersService = usersService;
     }
 
-    @PostMapping("")
-    public UserDto createUser(
-        @Valid @RequestBody CreateUserRequestDto createUserRequestDto
-    ) {
-        return usersService.createUser(createUserRequestDto);
-    }
 
     @GetMapping("/me")
-    public UserDto getCurrentUserInfo(@AuthenticationPrincipal User principal) {
-        long currentUserId = principal.getId();
-        return this.usersService.getById(currentUserId);
+    public UserDto getCurrentUserInfo(Authentication authentication) {
+        System.out.println(authentication.getName());
+        return new UserDto();
     }
 
     @DeleteMapping("/me")
