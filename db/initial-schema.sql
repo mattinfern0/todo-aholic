@@ -1,19 +1,28 @@
 CREATE SEQUENCE user_id_seq;
 
-CREATE TABLE IF NOT EXISTS app_user
+ALTER SEQUENCE user_id_seq OWNER TO dev;
+
+CREATE TABLE app_user
 (
-    id       BIGINT DEFAULT NEXTVAL('user_id_seq'::regclass) NOT NULL
+    id           BIGINT DEFAULT NEXTVAL('user_id_seq'::regclass) NOT NULL
         CONSTRAINT user_pk
             PRIMARY KEY,
-    email    VARCHAR(256)                                    NOT NULL
+    email        VARCHAR(256)                                    NOT NULL
         CONSTRAINT user_unique_email
             UNIQUE,
-    password VARCHAR(100)                                    NOT NULL
+    password     VARCHAR(100)                                    NOT NULL,
+    firebase_uid VARCHAR(50)
 );
+
+ALTER TABLE app_user
+    OWNER TO dev;
 
 ALTER SEQUENCE user_id_seq OWNED BY app_user.id;
 
-CREATE TABLE IF NOT EXISTS task_list
+CREATE UNIQUE INDEX app_user_firebase_uid_uindex
+    ON app_user (firebase_uid);
+
+CREATE TABLE task_list
 (
     id           BIGSERIAL
         CONSTRAINT task_list_pk
@@ -24,7 +33,10 @@ CREATE TABLE IF NOT EXISTS task_list
             REFERENCES app_user
 );
 
-CREATE TABLE IF NOT EXISTS task
+ALTER TABLE task_list
+    OWNER TO dev;
+
+CREATE TABLE task
 (
     id           BIGSERIAL
         CONSTRAINT task_pk
@@ -38,10 +50,14 @@ CREATE TABLE IF NOT EXISTS task
             REFERENCES task_list,
     description  VARCHAR(255) NOT NULL,
     due_at       TIMESTAMP,
-    completed_at TIMESTAMP
+    completed_at TIMESTAMP,
+    created_at   TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS authority
+ALTER TABLE task
+    OWNER TO dev;
+
+CREATE TABLE authority
 (
     internal_name VARCHAR(50) NOT NULL
         CONSTRAINT authority_unique_internal_name
@@ -51,7 +67,10 @@ CREATE TABLE IF NOT EXISTS authority
             PRIMARY KEY
 );
 
-CREATE TABLE IF NOT EXISTS user_authorities
+ALTER TABLE authority
+    OWNER TO dev;
+
+CREATE TABLE user_authorities
 (
     id           BIGSERIAL
         CONSTRAINT user_authorities_pk
@@ -62,4 +81,6 @@ CREATE TABLE IF NOT EXISTS user_authorities
         UNIQUE (user_id, authority_id)
 );
 
+ALTER TABLE user_authorities
+    OWNER TO dev;
 
