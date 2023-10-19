@@ -30,17 +30,23 @@ public class User implements UserDetails {
     @Size(max = 100)
     private String password;
 
+    @NotNull
+    @Column(name = "firebase_uid")
+    @NotBlank
+    @Size(max = 50)
+    private String firebaseUid;
+
     @OneToMany(mappedBy = "owner")
     private List<Task> tasks;
 
     @OneToMany(mappedBy = "owner")
     private List<TaskList> taskLists;
 
-    @ManyToMany(cascade = CascadeType.ALL )
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name="user_authorities",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="authority_id")
+            name = "user_authorities",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
     )
     private List<Authority> authorities;
 
@@ -101,8 +107,16 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public String getFirebaseUid() {
+        return firebaseUid;
+    }
+
+    public void setFirebaseUid(String firebaseUid) {
+        this.firebaseUid = firebaseUid;
+    }
+
     @Override
     public String toString() {
-        return this.email;
+        return this.getFirebaseUid();
     }
 }

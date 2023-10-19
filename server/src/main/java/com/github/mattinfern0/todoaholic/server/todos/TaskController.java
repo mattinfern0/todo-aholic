@@ -5,8 +5,11 @@ import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskRequestDto;
+import com.github.mattinfern0.todoaholic.server.users.UsersService;
+import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,20 +19,24 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final UsersService usersService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, UsersService usersService) {
         this.taskService = taskService;
+        this.usersService = usersService;
     }
 
     @GetMapping("")
     public List<TaskDto> listTasks(
             @RequestParam(required = false) Long taskListId,
-            @AuthenticationPrincipal User currentUser
+            Authentication authentication
     ) {
         if (taskListId != null) {
             return taskService.getTasksByTaskListId(taskListId);
         }
+
+        UserDto currentUser = usersService.getFromAuthentication(authentication);
 
         long currentUserId = currentUser.getId();
         List<TaskDto> taskDtos = taskService.getAllTasksOwnedByUser(currentUserId);

@@ -25,8 +25,8 @@ public class UserController {
 
     @GetMapping("/me")
     public UserDto getCurrentUserInfo(Authentication authentication) {
-        System.out.println(authentication.getName());
-        return new UserDto();
+        String userUid = authentication.getName();
+        return usersService.getByUid(userUid);
     }
 
     @DeleteMapping("/me")
