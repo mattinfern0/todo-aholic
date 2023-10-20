@@ -25,7 +25,7 @@ public class UsersService {
         User userEntity = userRepository.findByFirebaseUid(firebaseUid).orElseGet(() -> {
             User newUser = new User();
             newUser.setFirebaseUid(firebaseUid);
-            userRepository.save(newUser);
+            newUser = userRepository.save(newUser);
             return newUser;
         });
 

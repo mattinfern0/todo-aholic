@@ -2,7 +2,6 @@ import { z, ZodError } from "zod";
 
 export const UserDetailsSchema = z.object({
   id: z.number(),
-  email: z.string(),
 });
 
 export type UserDetails = z.infer<typeof UserDetailsSchema>;
