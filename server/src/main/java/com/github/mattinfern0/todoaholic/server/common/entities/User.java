@@ -1,34 +1,18 @@
 package com.github.mattinfern0.todoaholic.server.common.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "app_user")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    @Email
-    @NotBlank
-    @Column(name = "email", unique = true)
-    private String email;
-
-    @NotNull
-    @Column(name = "password")
-    @NotBlank
-    @Size(max = 100)
-    private String password;
 
     @NotNull
     @Column(name = "firebase_uid")
@@ -59,52 +43,6 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.getEmail();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirebaseUid() {

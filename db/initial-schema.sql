@@ -7,10 +7,6 @@ CREATE TABLE app_user
     id           BIGINT DEFAULT NEXTVAL('user_id_seq'::regclass) NOT NULL
         CONSTRAINT user_pk
             PRIMARY KEY,
-    email        VARCHAR(256)                                    NOT NULL
-        CONSTRAINT user_unique_email
-            UNIQUE,
-    password     VARCHAR(100)                                    NOT NULL,
     firebase_uid VARCHAR(50)
 );
 
