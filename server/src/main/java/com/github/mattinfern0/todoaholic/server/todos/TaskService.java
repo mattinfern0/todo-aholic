@@ -44,7 +44,6 @@ public class TaskService {
     @Transactional
     public TaskDto createTask(CreateTaskRequestDto createTaskRequestDto, User creator) {
         Task newTask = new Task();
-        newTask.setCompletedAt(null);
 
         Long taskListId = createTaskRequestDto.getTaskListId();
 
@@ -62,6 +61,7 @@ public class TaskService {
         newTask.setDescription(createTaskRequestDto.getDescription());
         newTask.setDueAt(createTaskRequestDto.getDueAt());
         newTask.setOwner(creator);
+        newTask.setCompletedAt(createTaskRequestDto.getCompletedAt());
 
         taskRepository.save(newTask);
 
