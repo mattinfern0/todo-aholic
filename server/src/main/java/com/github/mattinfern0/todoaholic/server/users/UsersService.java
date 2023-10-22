@@ -21,24 +21,33 @@ public class UsersService {
     }
 
     @Transactional
-    public UserDto getOrCreateByFirebaseUid(String firebaseUid) {
-        User userEntity = userRepository.findByFirebaseUid(firebaseUid).orElseGet(() -> {
+    public User getOrCreateUserByFirebaseUid(String firebaseUid) {
+        return userRepository.findByFirebaseUid(firebaseUid).orElseGet(() -> {
             User newUser = new User();
             newUser.setFirebaseUid(firebaseUid);
             newUser = userRepository.save(newUser);
             return newUser;
         });
+    }
 
+    @Transactional
+    public UserDto getUserDtoFromAuthentication(Authentication authentication) {
+        checkIfAuthenticationClassSupported(authentication);
+
+        User userEntity = getOrCreateUserByFirebaseUid(authentication.getName());
         return userDtoMapper.userToUserDto(userEntity);
     }
 
     @Transactional
-    public UserDto getFromAuthentication(Authentication authentication) {
+    public User getUserFromAuthentication(Authentication authentication) {
+        checkIfAuthenticationClassSupported(authentication);
+        return getOrCreateUserByFirebaseUid(authentication.getName());
+    }
+
+    private void checkIfAuthenticationClassSupported(Authentication authentication) {
         if (!(authentication instanceof JwtAuthenticationToken)) {
             throw new UnsupportedOperationException(String.format("Unsupported authentication class %s", authentication.getClass().getName()));
         }
-
-        return getOrCreateByFirebaseUid(authentication.getName());
     }
 
 }

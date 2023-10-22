@@ -10,7 +10,6 @@ import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class TaskController {
             return taskService.getTasksByTaskListId(taskListId);
         }
 
-        UserDto currentUser = usersService.getFromAuthentication(authentication);
+        UserDto currentUser = usersService.getUserDtoFromAuthentication(authentication);
 
         long currentUserId = currentUser.getId();
         List<TaskDto> taskDtos = taskService.getAllTasksOwnedByUser(currentUserId);
@@ -46,8 +45,9 @@ public class TaskController {
     @PostMapping("")
     public TaskDto createTask(
             @Valid @RequestBody CreateTaskRequestDto createTaskRequestDto,
-            @AuthenticationPrincipal User currentUser
+            Authentication authentication
     ) {
+        User currentUser = usersService.getUserFromAuthentication(authentication);
         return taskService.createTask(createTaskRequestDto, currentUser);
     }
 

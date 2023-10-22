@@ -20,6 +20,6 @@ public class UserController {
 
     @GetMapping("/me")
     public UserDto getCurrentUserInfo(Authentication authentication) {
-        return usersService.getFromAuthentication(authentication);
+        return usersService.getUserDtoFromAuthentication(authentication);
     }
 }

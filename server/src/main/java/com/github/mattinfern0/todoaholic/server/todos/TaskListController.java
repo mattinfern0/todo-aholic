@@ -8,7 +8,6 @@ import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,15 +26,16 @@ public class TaskListController {
 
     @GetMapping("")
     public List<TaskListSummaryDto> getList(Authentication authentication) {
-        UserDto currentUserDto = usersService.getFromAuthentication(authentication);
+        UserDto currentUserDto = usersService.getUserDtoFromAuthentication(authentication);
         return this.taskListService.getAllOwnedByUser(currentUserDto.getId());
     }
 
     @PostMapping("")
     public TaskListSummaryDto createTaskList(
             @Valid @RequestBody CreateTaskListDto createTaskListDto,
-            @AuthenticationPrincipal User currentUser
+            Authentication authentication
     ) {
+        User currentUser = usersService.getUserFromAuthentication(authentication);
         return taskListService.createTaskList(createTaskListDto, currentUser);
     }
 }
