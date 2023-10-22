@@ -48,7 +48,7 @@ class TaskServiceTest {
     void updateTaskStatusShouldMarkTaskAsCompleted() {
         UUID testTaskId = UUID.randomUUID();
         Task testTaskEntity = new Task();
-        testTaskEntity.setId(testTaskId);
+        testTaskEntity.setUuid(testTaskId);
 
         TaskStatusDto testNewStatus = new TaskStatusDto();
         testNewStatus.setIsComplete(true);
@@ -64,7 +64,7 @@ class TaskServiceTest {
     void getTaskStatusResultCompleteShouldBeTrueIfTaskIsCompleted() {
         UUID testTaskId = UUID.randomUUID();
         Task testTaskEntity = new Task();
-        testTaskEntity.setId(testTaskId);
+        testTaskEntity.setUuid(testTaskId);
         testTaskEntity.setCompletedAt(ZonedDateTime.now());
         Mockito.when(taskRepository.findByUuid(testTaskId)).thenReturn(Optional.of(testTaskEntity));
 
@@ -77,7 +77,7 @@ class TaskServiceTest {
     void getTaskStatusResultCompleteShouldBeFalseIfTaskIsNotComplete() {
         UUID testTaskId = UUID.randomUUID();
         Task testTaskEntity = new Task();
-        testTaskEntity.setId(testTaskId);
+        testTaskEntity.setUuid(testTaskId);
         testTaskEntity.setCompletedAt(null);
         Mockito.when(taskRepository.findByUuid(testTaskId)).thenReturn(Optional.of(testTaskEntity));
 

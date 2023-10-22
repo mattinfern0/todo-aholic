@@ -7,7 +7,7 @@ export const UserDetailsSchema = z.object({
 export type UserDetails = z.infer<typeof UserDetailsSchema>;
 
 export const TaskSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   ownerId: z.number(),
   taskListId: z.number().nullable(),
   displayName: z.string(),

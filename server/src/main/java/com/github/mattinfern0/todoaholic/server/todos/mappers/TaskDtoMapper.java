@@ -11,6 +11,7 @@ import java.util.List;
 public interface TaskDtoMapper {
     @Mapping(target = "ownerId", source = "owner.id")
     @Mapping(target = "taskListId", source = "taskList.id")
+    @Mapping(target = "id", source = "uuid")
     TaskDto taskToTaskDto(Task task);
 
     List<TaskDto> tasksToTaskDtos(List<Task> tasks);

@@ -12,9 +12,11 @@ import java.util.UUID;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @Column(name = "id")
+    private Long id;
 
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "uuid")
     private UUID uuid;
 
 
@@ -48,11 +50,11 @@ public class Task {
         createdAt = ZonedDateTime.now();
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
