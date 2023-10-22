@@ -1,8 +1,11 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Card,
   CardContent,
+  Chip,
   Container,
-  Divider,
   Drawer,
   IconButton,
   List,
@@ -16,7 +19,7 @@ import {
 import { TopAppBar } from "../../components/TopAppBar.tsx";
 import { TaskList } from "../../components/TaskList.tsx";
 import { CreateTaskForm } from "../../components/CreateTaskForm.tsx";
-import { Add, MoreVertRounded } from "@mui/icons-material";
+import { Add, ExpandMoreRounded, MoreVertRounded } from "@mui/icons-material";
 import { useUserTaskListsQuery, useUserTasksQuery } from "../../integrations/backendApi/queries.ts";
 import { SnackbarProvider } from "notistack";
 import { useState } from "react";
@@ -115,10 +118,26 @@ export const Tasks = () => {
             <TaskList tasks={incompleteTasks} onTaskListItemClick={onTaskListItemClick} />
             {showCompletedTasksSection && (
               <>
-                <Divider role="presentation">
-                  <Typography variant="h5">Completed</Typography>
-                </Divider>
-                <TaskList tasks={completeTasks} onTaskListItemClick={onTaskListItemClick} />
+                <Accordion disableGutters elevation={0}>
+                  <AccordionSummary expandIcon={<ExpandMoreRounded />}>
+                    <Stack direction="row" spacing={3} alignContent="center">
+                      <Typography variant="h5">Completed</Typography>
+                      <Chip
+                        color="secondary"
+                        label={completeTasks.length}
+                        style={{ fontWeight: "bold", fontSize: "1em" }}
+                      />
+                    </Stack>
+                  </AccordionSummary>
+                  <AccordionDetails
+                    style={{
+                      paddingLeft: 0,
+                      paddingRight: 0,
+                    }}
+                  >
+                    <TaskList tasks={completeTasks} onTaskListItemClick={onTaskListItemClick} />
+                  </AccordionDetails>
+                </Accordion>
               </>
             )}
           </CardContent>
