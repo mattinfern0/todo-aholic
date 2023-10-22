@@ -1,5 +1,5 @@
 import { Button, Grid, TextField } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { Add } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
 import { useCreateTaskMutation } from "../integrations/backendApi/mutations.ts";
@@ -7,7 +7,7 @@ import { useSnackbar } from "notistack";
 
 interface CreateTaskFormValues {
   display_name: string;
-  dueDate: string;
+  due_at: Date | null;
 }
 
 export const CreateTaskForm = () => {
@@ -16,7 +16,7 @@ export const CreateTaskForm = () => {
   const { control, handleSubmit, reset } = useForm<CreateTaskFormValues>({
     defaultValues: {
       display_name: "",
-      dueDate: "",
+      due_at: null,
     },
   });
 
@@ -25,6 +25,7 @@ export const CreateTaskForm = () => {
     createTaskMutation.mutate(
       {
         displayName: data.display_name,
+        dueAt: data.due_at,
       },
       {
         onSuccess: () => {
@@ -53,10 +54,14 @@ export const CreateTaskForm = () => {
           />
         </Grid>
         <Grid item>
-          <DatePicker label="Due Date" />
+          <Controller
+            control={control}
+            name="due_at"
+            render={({ field }) => <DateTimePicker label="Due At" {...field} />}
+          />
         </Grid>
         <Grid item md={2}>
-          <Button startIcon={<Add />} variant="contained" type="submit" disabled={createTaskMutation.isLoading}>
+          <Button startIcon={<Add />} variant="contained" type="submit" disabled={createTaskMutation.isPending}>
             Add
           </Button>
         </Grid>

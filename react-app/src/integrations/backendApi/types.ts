@@ -28,7 +28,7 @@ export type TaskListSummary = z.infer<typeof TaskListSummarySchema>;
 
 export type CreateTaskArgs = {
   displayName: string;
-  dueAt?: string | Date;
+  dueAt: Date | null;
 };
 
 export type UpdateTaskStatusArgs = {
