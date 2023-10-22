@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,14 +46,14 @@ class TaskServiceTest {
 
     @Test
     void updateTaskStatusShouldMarkTaskAsCompleted() {
-        Long testTaskId = 1L;
+        UUID testTaskId = UUID.randomUUID();
         Task testTaskEntity = new Task();
         testTaskEntity.setId(testTaskId);
 
         TaskStatusDto testNewStatus = new TaskStatusDto();
         testNewStatus.setIsComplete(true);
 
-        Mockito.when(taskRepository.findById(testTaskId)).thenReturn(Optional.of(testTaskEntity));
+        Mockito.when(taskRepository.findByUuid(testTaskId)).thenReturn(Optional.of(testTaskEntity));
         Mockito.when(taskRepository.save(testTaskEntity)).thenReturn(testTaskEntity);
 
         taskService.updateTaskStatus(testTaskId, testNewStatus);
@@ -61,11 +62,11 @@ class TaskServiceTest {
 
     @Test
     void getTaskStatusResultCompleteShouldBeTrueIfTaskIsCompleted() {
-        Long testTaskId = 1L;
+        UUID testTaskId = UUID.randomUUID();
         Task testTaskEntity = new Task();
         testTaskEntity.setId(testTaskId);
         testTaskEntity.setCompletedAt(ZonedDateTime.now());
-        Mockito.when(taskRepository.findById(testTaskId)).thenReturn(Optional.of(testTaskEntity));
+        Mockito.when(taskRepository.findByUuid(testTaskId)).thenReturn(Optional.of(testTaskEntity));
 
 
         TaskStatusDto result = taskService.getTaskStatus(testTaskId);
@@ -74,11 +75,11 @@ class TaskServiceTest {
 
     @Test
     void getTaskStatusResultCompleteShouldBeFalseIfTaskIsNotComplete() {
-        Long testTaskId = 1L;
+        UUID testTaskId = UUID.randomUUID();
         Task testTaskEntity = new Task();
         testTaskEntity.setId(testTaskId);
         testTaskEntity.setCompletedAt(null);
-        Mockito.when(taskRepository.findById(testTaskId)).thenReturn(Optional.of(testTaskEntity));
+        Mockito.when(taskRepository.findByUuid(testTaskId)).thenReturn(Optional.of(testTaskEntity));
 
         TaskStatusDto result = taskService.getTaskStatus(testTaskId);
         assertEquals(false, result.getIsComplete());

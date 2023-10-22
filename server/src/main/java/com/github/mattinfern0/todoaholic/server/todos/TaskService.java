@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TaskService {
@@ -86,9 +87,9 @@ public class TaskService {
         return taskDtoMapper.taskToTaskDto(targetTask);
     }
 
-    public TaskStatusDto getTaskStatus(Long taskId) {
+    public TaskStatusDto getTaskStatus(UUID taskId) {
         Task targetTask = taskRepository
-                .findById(taskId)
+                .findByUuid(taskId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
 
         TaskStatusDto result = new TaskStatusDto();
@@ -97,9 +98,9 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskStatusDto updateTaskStatus(Long taskId, TaskStatusDto taskStatusDto) {
+    public TaskStatusDto updateTaskStatus(UUID taskId, TaskStatusDto taskStatusDto) {
         Task targetTask = taskRepository
-                .findById(taskId)
+                .findByUuid(taskId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
 
         if (taskStatusDto.getIsComplete()) {

@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/tasks")
@@ -66,13 +67,13 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}/status")
-    public TaskStatusDto getTaskStatus(@PathVariable Long taskId) {
+    public TaskStatusDto getTaskStatus(@PathVariable UUID taskId) {
         return taskService.getTaskStatus(taskId);
     }
 
     @PutMapping("/{taskId}/status")
     public TaskStatusDto updateTaskStatus(
-            @PathVariable Long taskId,
+            @PathVariable UUID taskId,
             @Valid @RequestBody TaskStatusDto taskStatusDto
     ) {
         return taskService.updateTaskStatus(taskId, taskStatusDto);

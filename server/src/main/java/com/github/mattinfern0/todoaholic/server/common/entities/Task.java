@@ -5,13 +5,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "task")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
+
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID uuid;
+
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -43,12 +48,20 @@ public class Task {
         createdAt = ZonedDateTime.now();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public User getOwner() {

@@ -4,10 +4,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 public class TaskDto {
     @NotNull
-    Long id;
+    UUID id;
 
     @NotNull
     Long ownerId;
@@ -24,11 +25,11 @@ public class TaskDto {
     ZonedDateTime completedAt;
     ZonedDateTime dueAt;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
