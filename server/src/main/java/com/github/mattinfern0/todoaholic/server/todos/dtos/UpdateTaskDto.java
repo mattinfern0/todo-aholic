@@ -1,13 +1,11 @@
 package com.github.mattinfern0.todoaholic.server.todos.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Null;
-
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
-public class UpdateTaskRequestDto {
+public class UpdateTaskDto {
     String displayName;
-    Long taskListId;
+    UUID taskListId;
     String description;
 
     ZonedDateTime dueAt;
@@ -21,11 +19,11 @@ public class UpdateTaskRequestDto {
         this.displayName = displayName;
     }
 
-    public Long getTaskListId() {
+    public UUID getTaskListId() {
         return taskListId;
     }
 
-    public void setTaskListId(Long taskListId) {
+    public void setTaskListId(UUID taskListId) {
         this.taskListId = taskListId;
     }
 

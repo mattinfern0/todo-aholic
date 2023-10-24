@@ -4,7 +4,7 @@ import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
-import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskRequestDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskDto;
 import com.github.mattinfern0.todoaholic.server.users.UsersService;
 import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
 import jakarta.validation.Valid;
@@ -54,11 +54,11 @@ public class TaskController {
 
     @PatchMapping("/{taskId}")
     public TaskDto updateTask(
-            @PathVariable Long taskId,
-            @Valid @RequestBody UpdateTaskRequestDto updateTaskRequestDto
+            @PathVariable UUID taskId,
+            @Valid @RequestBody UpdateTaskDto updateTaskDto
     ) {
         User currentUser = new User();
-        return taskService.updateTask(taskId, updateTaskRequestDto);
+        return taskService.updateTask(taskId, updateTaskDto);
     }
 
     @DeleteMapping("/{taskId}")

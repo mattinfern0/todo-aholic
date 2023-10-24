@@ -6,7 +6,7 @@ import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
-import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskRequestDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapper;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskRepository;
@@ -70,18 +70,26 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskDto updateTask(Long taskId, UpdateTaskRequestDto updateTaskRequestDto) {
+    public TaskDto updateTask(UUID taskId, UpdateTaskDto updateTaskDto) {
+        // This will be used for a full update / PUT. Partial update is currently not supported.
         Task targetTask = taskRepository
-                .findById(taskId)
+                .findByUuid(taskId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
 
-        // TODO how to distinguish between taskListId=null meaning no taskList vs. do not update the taskList?
-        // CHeckout json-patch
+        TaskList newTaskList = null;
+        UUID newTaskListId = updateTaskDto.getTaskListId();
+        if (newTaskListId != null) {
+            newTaskList = taskListRepository
+                    .findByUuid(newTaskListId)
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("TaskList with id %s not found", newTaskListId)));
+        }
 
-        targetTask.setDisplayName(updateTaskRequestDto.getDisplayName());
-        targetTask.setDescription(updateTaskRequestDto.getDescription());
-        targetTask.setDueAt(updateTaskRequestDto.getDueAt());
-        targetTask.setCompletedAt(updateTaskRequestDto.getCompletedAt());
+
+        targetTask.setDisplayName(updateTaskDto.getDisplayName());
+        targetTask.setDescription(updateTaskDto.getDescription());
+        targetTask.setDueAt(updateTaskDto.getDueAt());
+        targetTask.setCompletedAt(updateTaskDto.getCompletedAt());
+        targetTask.setTaskList(newTaskList);
 
         taskRepository.save(targetTask);
         return taskDtoMapper.taskToTaskDto(targetTask);

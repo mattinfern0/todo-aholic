@@ -6,6 +6,7 @@ import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapper;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapperImpl;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
@@ -86,7 +87,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void createTaskValid() {
+    void createTasksWorksWithValidArgs() {
         TaskList testTaskList = new TaskList();
         testTaskList.setUuid(UUID.randomUUID());
 
@@ -104,6 +105,7 @@ class TaskServiceTest {
         Mockito.when(taskRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
 
         TaskDto newTask = taskService.createTask(testCreateTask, testUser);
+        assertNotNull(newTask.getId());
         assertEquals(testCreateTask.getDisplayName(), newTask.getDisplayName());
         assertEquals(testCreateTask.getDescription(), newTask.getDescription());
         assertEquals(testCreateTask.getTaskListId(), newTask.getTaskListId());
@@ -123,6 +125,84 @@ class TaskServiceTest {
 
         assertThrows(EntityNotFoundException.class, () -> {
             taskService.createTask(testCreateTask, testUser);
+        });
+    }
+
+    @Test
+    void updateTaskWorksWithValidArgs() {
+        TaskList existingList = new TaskList();
+        existingList.setUuid(UUID.randomUUID());
+
+        Task existingTask = new Task();
+        existingTask.setUuid(UUID.randomUUID());
+        existingTask.setDisplayName("Word 45");
+        existingTask.setDescription("M1");
+        existingTask.setCompletedAt(null);
+        existingTask.setDueAt(null);
+        existingTask.setTaskList(null);
+
+        UpdateTaskDto updateTaskDto = new UpdateTaskDto();
+        updateTaskDto.setDisplayName("WOrd 2");
+        updateTaskDto.setDescription("D1");
+        updateTaskDto.setCompletedAt(ZonedDateTime.now());
+        updateTaskDto.setDueAt(ZonedDateTime.now());
+        updateTaskDto.setTaskListId(existingList.getUuid());
+
+
+        Mockito.when(taskRepository.findByUuid(existingTask.getUuid())).thenReturn(Optional.of(existingTask));
+        Mockito.when(taskListRepository.findByUuid(existingList.getUuid())).thenReturn(Optional.of(existingList));
+        Mockito.when(taskRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+
+        TaskDto updatedTask = taskService.updateTask(existingTask.getUuid(), updateTaskDto);
+        assertEquals(updateTaskDto.getDisplayName(), updatedTask.getDisplayName());
+        assertEquals(updateTaskDto.getDescription(), updatedTask.getDescription());
+        assertEquals(updateTaskDto.getDueAt(), updatedTask.getDueAt());
+        assertEquals(updateTaskDto.getCompletedAt(), updatedTask.getCompletedAt());
+    }
+
+    @Test
+    void updateTaskDoesNotModifyUUID() {
+        Task existingTask = new Task();
+        existingTask.setUuid(UUID.randomUUID());
+        UUID oldUUID = existingTask.getUuid();
+
+        UpdateTaskDto updateTaskDto = new UpdateTaskDto();
+
+        Mockito.when(taskRepository.findByUuid(existingTask.getUuid())).thenReturn(Optional.of(existingTask));
+        Mockito.when(taskRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+
+        TaskDto updatedTask = taskService.updateTask(existingTask.getUuid(), updateTaskDto);
+        assertEquals(oldUUID, updatedTask.getId());
+    }
+
+    @Test
+    void updateTaskDoesNotModifyCreatedAt() {
+        Task existingTask = new Task();
+        existingTask.setUuid(UUID.randomUUID());
+        ZonedDateTime oldCreatedAt = existingTask.getCreatedAt();
+
+        UpdateTaskDto updateTaskDto = new UpdateTaskDto();
+
+        Mockito.when(taskRepository.findByUuid(existingTask.getUuid())).thenReturn(Optional.of(existingTask));
+        Mockito.when(taskRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+
+        TaskDto updatedTask = taskService.updateTask(existingTask.getUuid(), updateTaskDto);
+        assertEquals(oldCreatedAt, updatedTask.getCreatedAt());
+    }
+
+    @Test
+    void updateTaskShouldThrowExceptionIfTaskListDoesNotExist() {
+        UpdateTaskDto updateTaskDto = new UpdateTaskDto();
+        Task existingTask = new Task();
+        existingTask.setUuid(UUID.randomUUID());
+        UUID invalidTaskListId = UUID.randomUUID();
+        updateTaskDto.setTaskListId(invalidTaskListId);
+
+        Mockito.when(taskRepository.findByUuid(existingTask.getUuid())).thenReturn(Optional.of(existingTask));
+        Mockito.when(taskListRepository.findByUuid(invalidTaskListId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            taskService.updateTask(existingTask.getUuid(), updateTaskDto);
         });
     }
 }
