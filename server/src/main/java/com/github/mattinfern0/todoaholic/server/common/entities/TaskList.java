@@ -3,6 +3,7 @@ package com.github.mattinfern0.todoaholic.server.common.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,10 @@ public class TaskList {
     @Column(name = "uuid")
     @NotNull
     private UUID uuid = UUID.randomUUID();
+
+    @Column(name = "created_at")
+    @NotNull
+    private ZonedDateTime createdAt = ZonedDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -44,6 +49,14 @@ public class TaskList {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public User getOwner() {

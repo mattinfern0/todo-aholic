@@ -1,10 +1,13 @@
 package com.github.mattinfern0.todoaholic.server.todos.dtos;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class TaskListDto {
 
     UUID id;
+
+    ZonedDateTime createdAt;
 
 
     Long ownerId;
@@ -16,6 +19,14 @@ public class TaskListDto {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Long getOwnerId() {

@@ -1,5 +1,5 @@
 import { useAuth } from "./AuthContext.tsx";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useLoginMutation = () => {
   const auth = useAuth();
@@ -22,10 +22,12 @@ export const useSignUpMutation = () => {
 };
 
 export const useLogoutMutation = () => {
+  const queryClient = useQueryClient();
   const auth = useAuth();
 
   return useMutation({
     mutationFn: async (_args: unknown) => {
+      queryClient.clear();
       return await auth.logout();
     },
   });

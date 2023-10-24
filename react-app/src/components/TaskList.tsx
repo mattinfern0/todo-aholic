@@ -19,7 +19,7 @@ const TaskListItem = (props: { task: Task; onTaskListItemClick: (task: Task) => 
   const secondaryText = !isTaskComplete && task.dueAt ? `Due ${task.dueAt}` : null;
 
   const onCheckBoxClick = () => {
-    if (updateTaskStatusMutation.isLoading) {
+    if (updateTaskStatusMutation.isPending) {
       return;
     }
 
