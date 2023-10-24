@@ -4,8 +4,8 @@ import {
   ApiError,
   CreateTaskArgs,
   Task,
-  TaskListSummary,
-  TaskListSummarySchema,
+  TaskList,
+  TaskListSchema,
   TaskSchema,
   UpdateTaskStatusArgs,
   UserDetails,
@@ -72,10 +72,10 @@ export const getUserTasks = async (): Promise<Task[]> => {
   return schema.parse(await res.json());
 };
 
-export const getUserTaskLists = async (): Promise<TaskListSummary[]> => {
+export const getUserTaskLists = async (): Promise<TaskList[]> => {
   const res = await apiFetch("/task-lists");
 
-  const schema = z.array(TaskListSummarySchema);
+  const schema = z.array(TaskListSchema);
   return schema.parse(await res.json());
 };
 

@@ -78,7 +78,7 @@ const TaskListSideBar = (props: { handleNewTaskListClick: () => unknown }) => {
 export const Tasks = () => {
   const [showCreateTaskListDialog, setShowCreateTaskListDialog] = useState<boolean>(false);
   const userTasksQuery = useUserTasksQuery();
-  const [detailDialogTaskId, setDetailDialogTaskId] = useState<number | null>(null);
+  const [detailDialogTaskId, setDetailDialogTaskId] = useState<string | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState<boolean>(false);
 
   const incompleteTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt == null) ?? [];

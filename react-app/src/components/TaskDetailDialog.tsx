@@ -4,7 +4,7 @@ import { useUserTasksQuery } from "../integrations/backendApi/queries.ts";
 import { format } from "date-fns";
 
 export interface TaskDetailDialogProps {
-  taskId: number | null;
+  taskId: string | null;
   open: boolean;
   onClose: () => void;
 }

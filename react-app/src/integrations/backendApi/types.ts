@@ -18,13 +18,13 @@ export const TaskSchema = z.object({
 
 export type Task = z.infer<typeof TaskSchema>;
 
-export const TaskListSummarySchema = z.object({
-  id: z.number(),
+export const TaskListSchema = z.object({
+  id: z.string(),
   ownerId: z.number(),
   displayName: z.string(),
 });
 
-export type TaskListSummary = z.infer<typeof TaskListSummarySchema>;
+export type TaskList = z.infer<typeof TaskListSchema>;
 
 export type CreateTaskArgs = {
   displayName: string;
