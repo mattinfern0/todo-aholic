@@ -1,20 +1,20 @@
 package com.github.mattinfern0.todoaholic.server.todos.dtos;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.UUID;
 
-public class TaskListSummaryDto {
+public class TaskListDto {
 
-    Long id;
+    UUID id;
+
+
     Long ownerId;
     String displayName;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

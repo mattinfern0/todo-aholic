@@ -2,7 +2,7 @@ package com.github.mattinfern0.todoaholic.server.todos;
 
 import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskListDto;
-import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskListSummaryDto;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskListDto;
 import com.github.mattinfern0.todoaholic.server.users.UsersService;
 import com.github.mattinfern0.todoaholic.server.users.dtos.UserDto;
 import jakarta.validation.Valid;
@@ -25,13 +25,13 @@ public class TaskListController {
     }
 
     @GetMapping("")
-    public List<TaskListSummaryDto> getList(Authentication authentication) {
+    public List<TaskListDto> getList(Authentication authentication) {
         UserDto currentUserDto = usersService.getUserDtoFromAuthentication(authentication);
         return this.taskListService.getAllOwnedByUser(currentUserDto.getId());
     }
 
     @PostMapping("")
-    public TaskListSummaryDto createTaskList(
+    public TaskListDto createTaskList(
             @Valid @RequestBody CreateTaskListDto createTaskListDto,
             Authentication authentication
     ) {

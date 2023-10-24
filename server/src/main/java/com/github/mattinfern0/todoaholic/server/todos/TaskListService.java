@@ -3,8 +3,8 @@ package com.github.mattinfern0.todoaholic.server.todos;
 import com.github.mattinfern0.todoaholic.server.common.entities.TaskList;
 import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskListDto;
-import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskListSummaryDto;
-import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskListSummaryDtoMapper;
+import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskListDto;
+import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskListDtoMapper;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,29 +14,29 @@ import java.util.List;
 @Service
 public class TaskListService {
     private final TaskListRepository taskListRepository;
-    private final TaskListSummaryDtoMapper taskListSummaryDtoMapper;
+    private final TaskListDtoMapper taskListDtoMapper;
 
     @Autowired
-    public TaskListService(TaskListRepository taskListRepository, TaskListSummaryDtoMapper taskListSummaryDtoMapper) {
+    public TaskListService(TaskListRepository taskListRepository, TaskListDtoMapper taskListDtoMapper) {
         this.taskListRepository = taskListRepository;
-        this.taskListSummaryDtoMapper = taskListSummaryDtoMapper;
+        this.taskListDtoMapper = taskListDtoMapper;
     }
 
-    public List<TaskListSummaryDto> findAll() {
+    public List<TaskListDto> findAll() {
         List<TaskList> taskListEntities = taskListRepository.findAll();
-        return taskListSummaryDtoMapper.taskListsToTaskSummaryListDtos(taskListEntities);
+        return taskListDtoMapper.taskListsToTaskSummaryListDtos(taskListEntities);
     }
 
-    public List<TaskListSummaryDto> getAllOwnedByUser(Long userId) {
+    public List<TaskListDto> getAllOwnedByUser(Long userId) {
         List<TaskList> taskListEntities = taskListRepository.findByOwnerId(userId);
-        return taskListSummaryDtoMapper.taskListsToTaskSummaryListDtos(taskListEntities);
+        return taskListDtoMapper.taskListsToTaskSummaryListDtos(taskListEntities);
     }
 
-    public TaskListSummaryDto createTaskList(CreateTaskListDto createTaskListDto, User creator) {
+    public TaskListDto createTaskList(CreateTaskListDto createTaskListDto, User creator) {
         TaskList newTaskList = new TaskList();
         newTaskList.setDisplayName(createTaskListDto.getDisplayName());
         newTaskList.setOwner(creator);
         newTaskList = taskListRepository.save(newTaskList);
-        return taskListSummaryDtoMapper.taskListToTaskSummaryListDto(newTaskList);
+        return taskListDtoMapper.taskListToTaskSummaryListDto(newTaskList);
     }
 }
