@@ -13,7 +13,7 @@ public class TaskDto {
     @NotNull
     Long ownerId;
 
-    Long taskListId;
+    UUID taskListId;
 
     @NotEmpty
     String displayName;
@@ -41,11 +41,11 @@ public class TaskDto {
         this.ownerId = ownerId;
     }
 
-    public Long getTaskListId() {
+    public UUID getTaskListId() {
         return taskListId;
     }
 
-    public void setTaskListId(Long taskListId) {
+    public void setTaskListId(UUID taskListId) {
         this.taskListId = taskListId;
     }
 

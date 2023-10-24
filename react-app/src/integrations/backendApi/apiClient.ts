@@ -3,6 +3,7 @@ import {
   ApiConnectionError,
   ApiError,
   CreateTaskArgs,
+  CreateTaskListArgs,
   Task,
   TaskList,
   TaskListSchema,
@@ -77,6 +78,15 @@ export const getUserTaskLists = async (): Promise<TaskList[]> => {
 
   const schema = z.array(TaskListSchema);
   return schema.parse(await res.json());
+};
+
+export const createTaskList = async (createTaskListArgs: CreateTaskListArgs): Promise<TaskList> => {
+  const res = await apiFetch("/task-lists", {
+    method: "POST",
+    body: JSON.stringify(createTaskListArgs),
+  });
+
+  return TaskListSchema.parse(await res.json());
 };
 
 export const createTask = async (createTaskArgs: CreateTaskArgs): Promise<Task> => {

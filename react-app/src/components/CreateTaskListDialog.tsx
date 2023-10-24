@@ -1,6 +1,9 @@
 import { Controller, useForm } from "react-hook-form";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useEffect } from "react";
+import { useCreateTaskListMutation } from "../integrations/backendApi/mutations.ts";
+import { TaskList } from "../integrations/backendApi/types.ts";
+import { useSnackbar } from "notistack";
 
 interface CreateTaskListFormValues {
   name: string;
@@ -9,9 +12,12 @@ interface CreateTaskListFormValues {
 export interface CreateTaskListDialogProps {
   open: boolean;
   onClose: () => void;
+  onTaskListCreate?: (newList: TaskList) => void;
 }
 
 export const CreateTaskListDialog = (props: CreateTaskListDialogProps) => {
+  const createTaskListMutation = useCreateTaskListMutation();
+  const snackbar = useSnackbar();
   const { control, handleSubmit, reset } = useForm<CreateTaskListFormValues>({
     defaultValues: {
       name: "",
@@ -26,7 +32,25 @@ export const CreateTaskListDialog = (props: CreateTaskListDialogProps) => {
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-    reset();
+    createTaskListMutation.mutate(
+      { displayName: data.name },
+      {
+        onSuccess: (data) => {
+          reset();
+
+          snackbar.enqueueSnackbar("List created", { variant: "success" });
+
+          if (props.onTaskListCreate != undefined && data != null) {
+            props.onTaskListCreate(data);
+          }
+        },
+        onError: (error: unknown) => {
+          console.error(error);
+
+          snackbar.enqueueSnackbar("An error occurred while creating this list", { variant: "error" });
+        },
+      },
+    );
   });
 
   return (

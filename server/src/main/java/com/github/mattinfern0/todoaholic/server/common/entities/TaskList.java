@@ -14,6 +14,7 @@ public class TaskList {
     private Long id;
 
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(insertable = false)
     private UUID uuid;
 
     @ManyToOne

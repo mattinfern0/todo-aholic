@@ -16,7 +16,7 @@ public class Task {
     private Long id;
 
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid")
+    @Column(name = "uuid", insertable = false)
     private UUID uuid;
 
 

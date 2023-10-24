@@ -24,7 +24,7 @@ import { useUserTaskListsQuery, useUserTasksQuery } from "../../integrations/bac
 import { SnackbarProvider } from "notistack";
 import { useState } from "react";
 import { CreateTaskListDialog } from "../../components/CreateTaskListDialog.tsx";
-import { Task } from "../../integrations/backendApi/types.ts";
+import { Task, TaskList as TaskListType } from "../../integrations/backendApi/types.ts";
 import { TaskDetailDialog } from "../../components/TaskDetailDialog.tsx";
 
 const sidebarWidth = 400;
@@ -33,13 +33,19 @@ const DrawerSpacer = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const TaskListSideBar = (props: { handleNewTaskListClick: () => unknown }) => {
+interface TaskListSideBarProps {
+  handleNewTaskListClick: () => void;
+  handleAllTaskListsClick: () => void;
+  handleTaskListItemClick: (taskList: TaskListType) => void;
+}
+
+const TaskListSideBar = (props: TaskListSideBarProps) => {
   const userTaskListsQuery = useUserTaskListsQuery();
 
   const taskListNavItems =
     userTaskListsQuery.data?.map((taskList) => {
       return (
-        <ListItemButton key={taskList.id}>
+        <ListItemButton key={taskList.id} onClick={() => props.handleTaskListItemClick(taskList)}>
           <ListItemText primary={taskList.displayName} />
         </ListItemButton>
       );
@@ -60,7 +66,7 @@ const TaskListSideBar = (props: { handleNewTaskListClick: () => unknown }) => {
     >
       <DrawerSpacer />
       <List>
-        <ListItemButton>
+        <ListItemButton onClick={props.handleAllTaskListsClick}>
           <ListItemText primary="All Tasks" />
         </ListItemButton>
         {taskListNavItems}
@@ -76,13 +82,22 @@ const TaskListSideBar = (props: { handleNewTaskListClick: () => unknown }) => {
 };
 
 export const Tasks = () => {
+  const [currentTaskListId, setCurrentTaskListId] = useState<string | null>(null);
   const [showCreateTaskListDialog, setShowCreateTaskListDialog] = useState<boolean>(false);
   const userTasksQuery = useUserTasksQuery();
+  const userTaskListsQuery = useUserTaskListsQuery();
   const [detailDialogTaskId, setDetailDialogTaskId] = useState<string | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState<boolean>(false);
 
-  const incompleteTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt == null) ?? [];
-  const completeTasks: Task[] = userTasksQuery.data?.filter((t) => t.completedAt != null) ?? [];
+  let displayTaskList = null;
+  let displayTasks = userTasksQuery.data ?? [];
+
+  if (currentTaskListId != null) {
+    displayTaskList = userTaskListsQuery.data?.find((l) => l.id === currentTaskListId) ?? null;
+    displayTasks = displayTasks.filter((t) => t.taskListId === currentTaskListId);
+  }
+  const incompleteTasks: Task[] = displayTasks.filter((t) => t.completedAt == null) ?? [];
+  const completeTasks: Task[] = displayTasks.filter((t) => t.completedAt != null) ?? [];
 
   const showCompletedTasksSection = completeTasks.length > 0;
 
@@ -91,11 +106,24 @@ export const Tasks = () => {
     setShowDetailDialog(true);
   };
 
+  const listTitle = displayTaskList?.displayName ?? "All Tasks";
+
   return (
     <SnackbarProvider>
       <TopAppBar />
-      <TaskListSideBar handleNewTaskListClick={() => setShowCreateTaskListDialog(true)} />
-      <CreateTaskListDialog open={showCreateTaskListDialog} onClose={() => setShowCreateTaskListDialog(false)} />
+      <TaskListSideBar
+        handleNewTaskListClick={() => setShowCreateTaskListDialog(true)}
+        handleAllTaskListsClick={() => setCurrentTaskListId(null)}
+        handleTaskListItemClick={(taskList) => setCurrentTaskListId(taskList.id)}
+      />
+      <CreateTaskListDialog
+        open={showCreateTaskListDialog}
+        onClose={() => setShowCreateTaskListDialog(false)}
+        onTaskListCreate={async (newList) => {
+          setCurrentTaskListId(newList.id);
+          setShowCreateTaskListDialog(false);
+        }}
+      />
       <TaskDetailDialog
         taskId={detailDialogTaskId}
         open={showDetailDialog}
@@ -106,7 +134,7 @@ export const Tasks = () => {
           <CardContent>
             <Stack direction="row" justifyContent="space-between" alignContent="baseline">
               <Typography variant="h5" mb="1rem">
-                All Tasks
+                {listTitle}
               </Typography>
 
               <IconButton>

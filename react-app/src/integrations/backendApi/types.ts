@@ -9,7 +9,7 @@ export type UserDetails = z.infer<typeof UserDetailsSchema>;
 export const TaskSchema = z.object({
   id: z.string(),
   ownerId: z.number(),
-  taskListId: z.number().nullable(),
+  taskListId: z.string().nullable(),
   displayName: z.string(),
   description: z.string().nullable(),
   completedAt: z.coerce.date().nullable(),
@@ -34,6 +34,10 @@ export type CreateTaskArgs = {
 export type UpdateTaskStatusArgs = {
   taskId: number;
   isComplete: boolean;
+};
+
+export type CreateTaskListArgs = {
+  displayName: string;
 };
 
 const ApiValidationErrorDetailItemSchema = z.object({

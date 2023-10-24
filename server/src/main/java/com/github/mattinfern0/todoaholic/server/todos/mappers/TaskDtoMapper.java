@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper()
 public interface TaskDtoMapper {
     @Mapping(target = "ownerId", source = "owner.id")
-    @Mapping(target = "taskListId", source = "taskList.id")
+    @Mapping(target = "taskListId", source = "taskList.uuid")
     @Mapping(target = "id", source = "uuid")
     TaskDto taskToTaskDto(Task task);
 
