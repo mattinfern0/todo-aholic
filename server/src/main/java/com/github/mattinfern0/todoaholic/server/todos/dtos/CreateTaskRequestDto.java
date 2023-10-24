@@ -4,12 +4,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 public class CreateTaskRequestDto {
     @NotEmpty
     String displayName;
 
-    Long taskListId;
+    UUID taskListId;
 
     @NotNull
     String description;
@@ -29,11 +30,11 @@ public class CreateTaskRequestDto {
         this.displayName = displayName;
     }
 
-    public Long getTaskListId() {
+    public UUID getTaskListId() {
         return taskListId;
     }
 
-    public void setTaskListId(Long taskListId) {
+    public void setTaskListId(UUID taskListId) {
         this.taskListId = taskListId;
     }
 

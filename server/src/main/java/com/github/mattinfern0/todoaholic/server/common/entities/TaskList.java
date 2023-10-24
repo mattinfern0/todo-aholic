@@ -14,8 +14,9 @@ public class TaskList {
     private Long id;
 
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(insertable = false)
-    private UUID uuid;
+    @Column(name = "uuid")
+    @NotNull
+    private UUID uuid = UUID.randomUUID();
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -24,7 +25,7 @@ public class TaskList {
 
     @Column(name = "display_name")
     @NotNull
-    private String displayName;
+    private String displayName = "";
 
     @OneToMany(mappedBy = "taskList")
     private List<Task> tasks;

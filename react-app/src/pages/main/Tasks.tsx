@@ -90,11 +90,10 @@ export const Tasks = () => {
   const [showDetailDialog, setShowDetailDialog] = useState<boolean>(false);
 
   let displayTaskList = null;
-  let displayTasks = userTasksQuery.data ?? [];
+  const displayTasks = userTasksQuery.data?.filter((t) => t.taskListId === currentTaskListId) ?? [];
 
   if (currentTaskListId != null) {
     displayTaskList = userTaskListsQuery.data?.find((l) => l.id === currentTaskListId) ?? null;
-    displayTasks = displayTasks.filter((t) => t.taskListId === currentTaskListId);
   }
   const incompleteTasks: Task[] = displayTasks.filter((t) => t.completedAt == null) ?? [];
   const completeTasks: Task[] = displayTasks.filter((t) => t.completedAt != null) ?? [];
@@ -142,7 +141,7 @@ export const Tasks = () => {
               </IconButton>
             </Stack>
 
-            <CreateTaskForm />
+            <CreateTaskForm currentTaskListId={currentTaskListId} />
             <TaskList tasks={incompleteTasks} onTaskListItemClick={onTaskListItemClick} />
             {showCompletedTasksSection && (
               <>

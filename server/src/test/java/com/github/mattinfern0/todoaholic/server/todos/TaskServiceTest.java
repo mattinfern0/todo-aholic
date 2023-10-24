@@ -88,19 +88,19 @@ class TaskServiceTest {
     @Test
     void createTaskValid() {
         TaskList testTaskList = new TaskList();
-        testTaskList.setId(42L);
+        testTaskList.setUuid(UUID.randomUUID());
 
         CreateTaskRequestDto testCreateTask = new CreateTaskRequestDto();
         testCreateTask.setDueAt(ZonedDateTime.now());
         testCreateTask.setDisplayName("Gold ritual");
         testCreateTask.setDescription("We're rich! We're rich! We're rich!");
         testCreateTask.setCompletedAt(ZonedDateTime.now());
-        testCreateTask.setTaskListId(testTaskList.getId());
+        testCreateTask.setTaskListId(testTaskList.getUuid());
 
         User testUser = new User();
         testUser.setId(10L);
 
-        Mockito.when(taskListRepository.findById(testTaskList.getId())).thenReturn(Optional.of(testTaskList));
+        Mockito.when(taskListRepository.findByUuid(testTaskList.getUuid())).thenReturn(Optional.of(testTaskList));
         Mockito.when(taskRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
 
         TaskDto newTask = taskService.createTask(testCreateTask, testUser);
@@ -115,11 +115,11 @@ class TaskServiceTest {
     @Test
     void createTaskShouldThrowExceptionIfTaskListIdDoesNotExist() {
         CreateTaskRequestDto testCreateTask = new CreateTaskRequestDto();
-        Long invalidTaskListId = 42L;
+        UUID invalidTaskListId = UUID.randomUUID();
         testCreateTask.setTaskListId(invalidTaskListId);
         User testUser = new User();
 
-        Mockito.when(taskListRepository.findById(invalidTaskListId)).thenReturn(Optional.empty());
+        Mockito.when(taskListRepository.findByUuid(invalidTaskListId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> {
             taskService.createTask(testCreateTask, testUser);

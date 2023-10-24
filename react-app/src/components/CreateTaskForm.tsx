@@ -10,7 +10,7 @@ interface CreateTaskFormValues {
   due_at: Date | null;
 }
 
-export const CreateTaskForm = () => {
+export const CreateTaskForm = (props: { currentTaskListId: string | null }) => {
   const createTaskMutation = useCreateTaskMutation();
   const { enqueueSnackbar } = useSnackbar();
   const { control, handleSubmit, reset } = useForm<CreateTaskFormValues>({
@@ -26,6 +26,7 @@ export const CreateTaskForm = () => {
       {
         displayName: data.display_name,
         dueAt: data.due_at,
+        taskListId: props.currentTaskListId,
       },
       {
         onSuccess: () => {

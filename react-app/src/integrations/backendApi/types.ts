@@ -29,6 +29,7 @@ export type TaskList = z.infer<typeof TaskListSchema>;
 export type CreateTaskArgs = {
   displayName: string;
   dueAt: Date | null;
+  taskListId: string | null;
 };
 
 export type UpdateTaskStatusArgs = {

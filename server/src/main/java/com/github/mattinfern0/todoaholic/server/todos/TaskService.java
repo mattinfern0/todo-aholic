@@ -46,11 +46,11 @@ public class TaskService {
     public TaskDto createTask(CreateTaskRequestDto createTaskRequestDto, User creator) {
         Task newTask = new Task();
 
-        Long taskListId = createTaskRequestDto.getTaskListId();
+        UUID taskListId = createTaskRequestDto.getTaskListId();
 
         if (taskListId != null) {
             TaskList targetTaskList = taskListRepository
-                    .findById(taskListId)
+                    .findByUuid(taskListId)
                     .orElseThrow(() -> new EntityNotFoundException(
                             String.format("TaskList with id %s not found", taskListId)
                     ));
@@ -64,7 +64,7 @@ public class TaskService {
         newTask.setOwner(creator);
         newTask.setCompletedAt(createTaskRequestDto.getCompletedAt());
 
-        taskRepository.save(newTask);
+        newTask = taskRepository.save(newTask);
 
         return taskDtoMapper.taskToTaskDto(newTask);
     }

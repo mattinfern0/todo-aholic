@@ -16,8 +16,9 @@ public class Task {
     private Long id;
 
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid", insertable = false)
-    private UUID uuid;
+    @Column(name = "uuid")
+    @NotNull
+    private UUID uuid = UUID.randomUUID();
 
 
     @ManyToOne
@@ -31,24 +32,20 @@ public class Task {
 
     @Size(max = 100)
     @NotNull
-    private String displayName;
+    private String displayName = "";
 
     @Size(max = 1000)
     private String description = "";
 
     @Column(name = "created_at")
     @NotNull
-    private ZonedDateTime createdAt;
+    private ZonedDateTime createdAt = ZonedDateTime.now();
 
     @Column(name = "completed_at")
     private ZonedDateTime completedAt = null;
 
     @Column(name = "due_at")
     private ZonedDateTime dueAt = null;
-
-    public Task() {
-        createdAt = ZonedDateTime.now();
-    }
 
     public Long getId() {
         return id;
