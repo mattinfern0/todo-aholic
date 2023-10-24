@@ -62,6 +62,16 @@ class TaskServiceTest {
     }
 
     @Test
+    void getTaskStatusShouldThrowExceptionIfTaskDoesNotExist() {
+        UUID testTaskId = UUID.randomUUID();
+        Mockito.when(taskRepository.findByUuid(testTaskId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            taskService.getTaskStatus(testTaskId);
+        });
+    }
+
+    @Test
     void getTaskStatusResultCompleteShouldBeTrueIfTaskIsCompleted() {
         UUID testTaskId = UUID.randomUUID();
         Task testTaskEntity = new Task();
