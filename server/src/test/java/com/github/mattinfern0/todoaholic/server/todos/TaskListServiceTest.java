@@ -4,10 +4,10 @@ import com.github.mattinfern0.todoaholic.server.common.entities.User;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskListDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskListDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskListDtoMapper;
-import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskListDtoMapperImpl;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -28,7 +28,7 @@ class TaskListServiceTest {
     private TaskListRepository taskListRepository;
 
     @Spy
-    private TaskListDtoMapper taskListDtoMapper = new TaskListDtoMapperImpl();
+    private TaskListDtoMapper taskListDtoMapper = Mappers.getMapper(TaskListDtoMapper.class);
 
     @Test
     void createTaskListWorksWithValidArgs() {

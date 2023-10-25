@@ -8,18 +8,17 @@ import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.UpdateTaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapper;
-import com.github.mattinfern0.todoaholic.server.todos.mappers.TaskDtoMapperImpl;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskListRepository;
 import com.github.mattinfern0.todoaholic.server.todos.repositories.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -29,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
 class TaskServiceTest {
 
 
@@ -43,7 +41,7 @@ class TaskServiceTest {
     private TaskListRepository taskListRepository;
 
     @Spy
-    private TaskDtoMapper taskDtoMapper = new TaskDtoMapperImpl();
+    private TaskDtoMapper taskDtoMapper = Mappers.getMapper(TaskDtoMapper.class);
 
     @Test
     void updateTaskStatusShouldMarkTaskAsCompleted() {
