@@ -32,8 +32,8 @@ public class TaskListController {
 
     @PostMapping("")
     public TaskListDto createTaskList(
-            @Valid @RequestBody CreateTaskListDto createTaskListDto,
-            Authentication authentication
+        @Valid @RequestBody CreateTaskListDto createTaskListDto,
+        Authentication authentication
     ) {
         User currentUser = usersService.getUserFromAuthentication(authentication);
         return taskListService.createTaskList(createTaskListDto, currentUser);

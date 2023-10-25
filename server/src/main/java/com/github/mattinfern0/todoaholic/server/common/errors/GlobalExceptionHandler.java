@@ -26,6 +26,11 @@ public class GlobalExceptionHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Invalid credentials");
     }
 
+    @ExceptionHandler({PermissionDeniedException.class})
+    public ProblemDetail handlePermissionDenied() {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, "Permission denied");
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationError(MethodArgumentNotValidException err) {
         ProblemDetail res = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation Error");

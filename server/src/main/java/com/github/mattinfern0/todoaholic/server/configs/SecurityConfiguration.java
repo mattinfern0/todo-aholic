@@ -30,12 +30,12 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(Customizer.withDefaults())
-                .formLogin().disable()
-                .csrf().disable()
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
-                .build();
+            .cors(Customizer.withDefaults())
+            .formLogin().disable()
+            .csrf().disable()
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+            .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+            .build();
     }
 
     @Bean

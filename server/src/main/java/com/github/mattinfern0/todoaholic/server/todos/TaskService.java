@@ -50,10 +50,10 @@ public class TaskService {
 
         if (taskListId != null) {
             TaskList targetTaskList = taskListRepository
-                    .findByUuid(taskListId)
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            String.format("TaskList with id %s not found", taskListId)
-                    ));
+                .findByUuid(taskListId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                    String.format("TaskList with id %s not found", taskListId)
+                ));
 
             newTask.setTaskList(targetTaskList);
         }
@@ -73,15 +73,15 @@ public class TaskService {
     public TaskDto updateTask(UUID taskId, UpdateTaskDto updateTaskDto) {
         // This will be used for a full update / PUT. Partial update is currently not supported.
         Task targetTask = taskRepository
-                .findByUuid(taskId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+            .findByUuid(taskId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
 
         TaskList newTaskList = null;
         UUID newTaskListId = updateTaskDto.getTaskListId();
         if (newTaskListId != null) {
             newTaskList = taskListRepository
-                    .findByUuid(newTaskListId)
-                    .orElseThrow(() -> new EntityNotFoundException(String.format("TaskList with id %s not found", newTaskListId)));
+                .findByUuid(newTaskListId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("TaskList with id %s not found", newTaskListId)));
         }
 
 
@@ -95,10 +95,18 @@ public class TaskService {
         return taskDtoMapper.taskToTaskDto(targetTask);
     }
 
+    public boolean doesUserHaveUpdatePermission(UUID taskId, User user) {
+        Task targetTask = taskRepository
+            .findByUuid(taskId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+
+        return targetTask.getOwner().getId().equals(user.getId());
+    }
+
     public TaskStatusDto getTaskStatus(UUID taskId) {
         Task targetTask = taskRepository
-                .findByUuid(taskId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+            .findByUuid(taskId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
 
         TaskStatusDto result = new TaskStatusDto();
         result.setIsComplete(targetTask.getCompletedAt() != null);
@@ -108,8 +116,8 @@ public class TaskService {
     @Transactional
     public TaskStatusDto updateTaskStatus(UUID taskId, TaskStatusDto taskStatusDto) {
         Task targetTask = taskRepository
-                .findByUuid(taskId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
+            .findByUuid(taskId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Task with id %s not found", taskId)));
 
         if (taskStatusDto.getIsComplete()) {
             targetTask.setCompletedAt(ZonedDateTime.now());

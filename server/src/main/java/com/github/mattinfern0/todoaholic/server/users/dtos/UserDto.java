@@ -4,7 +4,8 @@ public class UserDto {
     Long id;
     String email;
 
-    public UserDto() {}
+    public UserDto() {
+    }
 
     public Long getId() {
         return id;

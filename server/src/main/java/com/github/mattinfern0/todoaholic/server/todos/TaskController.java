@@ -1,6 +1,7 @@
 package com.github.mattinfern0.todoaholic.server.todos;
 
 import com.github.mattinfern0.todoaholic.server.common.entities.User;
+import com.github.mattinfern0.todoaholic.server.common.errors.PermissionDeniedException;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.CreateTaskRequestDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskDto;
 import com.github.mattinfern0.todoaholic.server.todos.dtos.TaskStatusDto;
@@ -29,8 +30,8 @@ public class TaskController {
 
     @GetMapping("")
     public List<TaskDto> listTasks(
-            @RequestParam(required = false) Long taskListId,
-            Authentication authentication
+        @RequestParam(required = false) Long taskListId,
+        Authentication authentication
     ) {
         if (taskListId != null) {
             return taskService.getTasksByTaskListId(taskListId);
@@ -39,14 +40,13 @@ public class TaskController {
         UserDto currentUser = usersService.getUserDtoFromAuthentication(authentication);
 
         long currentUserId = currentUser.getId();
-        List<TaskDto> taskDtos = taskService.getAllTasksOwnedByUser(currentUserId);
-        return taskDtos;
+        return taskService.getAllTasksOwnedByUser(currentUserId);
     }
 
     @PostMapping("")
     public TaskDto createTask(
-            @Valid @RequestBody CreateTaskRequestDto createTaskRequestDto,
-            Authentication authentication
+        @Valid @RequestBody CreateTaskRequestDto createTaskRequestDto,
+        Authentication authentication
     ) {
         User currentUser = usersService.getUserFromAuthentication(authentication);
         return taskService.createTask(createTaskRequestDto, currentUser);
@@ -54,10 +54,16 @@ public class TaskController {
 
     @PatchMapping("/{taskId}")
     public TaskDto updateTask(
-            @PathVariable UUID taskId,
-            @Valid @RequestBody UpdateTaskDto updateTaskDto
+        @PathVariable UUID taskId,
+        @Valid @RequestBody UpdateTaskDto updateTaskDto,
+        Authentication authentication
     ) {
-        User currentUser = new User();
+        User currentUser = usersService.getUserFromAuthentication(authentication);
+
+        if (!taskService.doesUserHaveUpdatePermission(taskId, currentUser)) {
+            throw new PermissionDeniedException();
+        }
+
         return taskService.updateTask(taskId, updateTaskDto);
     }
 
@@ -73,8 +79,8 @@ public class TaskController {
 
     @PutMapping("/{taskId}/status")
     public TaskStatusDto updateTaskStatus(
-            @PathVariable UUID taskId,
-            @Valid @RequestBody TaskStatusDto taskStatusDto
+        @PathVariable UUID taskId,
+        @Valid @RequestBody TaskStatusDto taskStatusDto
     ) {
         return taskService.updateTaskStatus(taskId, taskStatusDto);
     }
