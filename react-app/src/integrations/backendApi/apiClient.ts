@@ -4,6 +4,7 @@ import {
   ApiError,
   CreateTaskArgs,
   CreateTaskListArgs,
+  DeleteTaskArgs,
   Task,
   TaskList,
   TaskListSchema,
@@ -96,6 +97,12 @@ export const createTask = async (createTaskArgs: CreateTaskArgs): Promise<Task> 
   });
 
   return TaskSchema.parse(await res.json());
+};
+
+export const deleteTask = async (args: DeleteTaskArgs): Promise<void> => {
+  await apiFetch(`/tasks/${args.taskId}`, {
+    method: "DELETE",
+  });
 };
 
 export const updateTaskStatus = async (args: UpdateTaskStatusArgs): Promise<void> => {

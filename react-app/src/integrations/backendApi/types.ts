@@ -41,6 +41,10 @@ export type CreateTaskListArgs = {
   displayName: string;
 };
 
+export type DeleteTaskArgs = {
+  taskId: string;
+};
+
 const ApiValidationErrorDetailItemSchema = z.object({
   code: z.string(),
   message: z.string(),
