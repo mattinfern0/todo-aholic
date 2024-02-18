@@ -130,7 +130,12 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTaskWithId(Long taskId) {
-        taskRepository.deleteById(taskId);
+    public void deleteTaskWithId(UUID taskId) {
+        Task targetTask = taskRepository
+            .findByUuid(taskId)
+            .orElseThrow(
+                () -> new EntityNotFoundException(String.format("Task with id %s not found", taskId))
+            );
+        taskRepository.delete(targetTask);
     }
 }

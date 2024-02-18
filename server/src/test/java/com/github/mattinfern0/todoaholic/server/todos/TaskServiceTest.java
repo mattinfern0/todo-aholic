@@ -213,4 +213,14 @@ class TaskServiceTest {
             taskService.updateTask(existingTask.getUuid(), updateTaskDto);
         });
     }
+
+    @Test
+    void deleteTaskShouldThrowExceptionIfTaskDoesNotExist() {
+        UUID testUUID = UUID.randomUUID();
+        Mockito.when(taskRepository.findByUuid(testUUID)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            taskService.deleteTaskWithId(testUUID);
+        });
+    }
 }

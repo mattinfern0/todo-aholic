@@ -68,7 +68,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public void deleteTask(@PathVariable Long taskId) {
+    public void deleteTask(@PathVariable UUID taskId) {
         taskService.deleteTaskWithId(taskId);
     }
 
