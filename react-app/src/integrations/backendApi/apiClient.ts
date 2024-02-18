@@ -9,6 +9,7 @@ import {
   TaskList,
   TaskListSchema,
   TaskSchema,
+  UpdateTaskArgs,
   UpdateTaskStatusArgs,
   UserDetails,
   UserDetailsSchema,
@@ -94,6 +95,15 @@ export const createTask = async (createTaskArgs: CreateTaskArgs): Promise<Task> 
   const res = await apiFetch("/tasks", {
     method: "POST",
     body: JSON.stringify(createTaskArgs),
+  });
+
+  return TaskSchema.parse(await res.json());
+};
+
+export const updateTask = async (args: UpdateTaskArgs): Promise<Task> => {
+  const res = await apiFetch(`/tasks/${args.taskId}`, {
+    body: JSON.stringify(args.data),
+    method: "PUT",
   });
 
   return TaskSchema.parse(await res.json());

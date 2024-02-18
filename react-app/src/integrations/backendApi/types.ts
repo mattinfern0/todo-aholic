@@ -32,8 +32,19 @@ export type CreateTaskArgs = {
   taskListId: string | null;
 };
 
+export type UpdateTaskArgs = {
+  taskId: string;
+  data: {
+    taskListId: string | null;
+    displayName: string;
+    description: string;
+    dueAt: Date | null;
+    completedAt: Date | null;
+  };
+};
+
 export type UpdateTaskStatusArgs = {
-  taskId: number;
+  taskId: string;
   isComplete: boolean;
 };
 
