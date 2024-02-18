@@ -52,7 +52,7 @@ public class TaskController {
         return taskService.createTask(createTaskRequestDto, currentUser);
     }
 
-    @PatchMapping("/{taskId}")
+    @PutMapping("/{taskId}")
     public TaskDto updateTask(
         @PathVariable UUID taskId,
         @Valid @RequestBody UpdateTaskDto updateTaskDto,

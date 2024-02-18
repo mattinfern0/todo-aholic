@@ -2,7 +2,7 @@ import { Box, Button, Dialog, DialogContent, Grid, IconButton, Stack, TextField,
 import { Task } from "../integrations/backendApi/types.ts";
 import { useUserTasksQuery } from "../integrations/backendApi/queries.ts";
 import { format } from "date-fns";
-import { useDeleteTaskMutation } from "../integrations/backendApi/mutations.ts";
+import { useDeleteTaskMutation, useUpdateTaskMutation } from "../integrations/backendApi/mutations.ts";
 import { Delete, Edit } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
@@ -58,6 +58,8 @@ interface EditTaskFormValues {
 
 const TaskEditLayout = (props: { task: Task; handleClose: () => void }) => {
   const { task } = props;
+  const updateTaskMutation = useUpdateTaskMutation();
+  const { enqueueSnackbar } = useSnackbar();
   const { control, handleSubmit } = useForm<EditTaskFormValues>({
     defaultValues: {
       display_name: task.displayName,
@@ -69,12 +71,28 @@ const TaskEditLayout = (props: { task: Task; handleClose: () => void }) => {
 
   const onSubmit = handleSubmit(
     (data) => {
-      console.log(data);
-      props.handleClose();
-
-      task.description = data.description;
-      task.displayName = data.display_name;
-      task.dueAt = data.due_at;
+      updateTaskMutation.mutate(
+        {
+          taskId: task.id,
+          data: {
+            taskListId: task.taskListId,
+            displayName: data.display_name,
+            description: data.description,
+            dueAt: data.due_at,
+            completedAt: task.completedAt,
+          },
+        },
+        {
+          onSuccess: () => {
+            enqueueSnackbar("Task updated!", { variant: "success" });
+            props.handleClose();
+          },
+          onError: (err) => {
+            console.error(err);
+            enqueueSnackbar("An error occurred while updating this task.", { variant: "error" });
+          },
+        },
+      );
     },
     (errors) => console.log(errors),
   );

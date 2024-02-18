@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as backendAPI from "./apiClient.ts";
 import { queryKeys } from "./queryKeys.ts";
-import { CreateTaskArgs, CreateTaskListArgs, DeleteTaskArgs, UpdateTaskStatusArgs } from "./types.ts";
+import { CreateTaskArgs, CreateTaskListArgs, DeleteTaskArgs, UpdateTaskArgs, UpdateTaskStatusArgs } from "./types.ts";
 import { useCurrentUserDetailsQuery } from "./queries.ts";
 
 export const useLoginMutation = () => {
@@ -41,6 +41,25 @@ export const useCreateTaskMutation = () => {
     mutationFn: async (args: CreateTaskArgs) => {
       if (currentUserQuery.data) {
         await backendAPI.createTask(args);
+      }
+    },
+
+    onSuccess: async () => {
+      if (currentUserQuery.data) {
+        await queryClient.invalidateQueries({ queryKey: queryKeys.userTasks(currentUserQuery.data.id) });
+      }
+    },
+  });
+};
+
+export const useUpdateTaskMutation = () => {
+  const queryClient = useQueryClient();
+  const currentUserQuery = useCurrentUserDetailsQuery();
+
+  return useMutation({
+    mutationFn: async (args: UpdateTaskArgs) => {
+      if (currentUserQuery.data) {
+        await backendAPI.updateTask(args);
       }
     },
 
